@@ -1,0 +1,10 @@
+users:
+	-	firstName: Jimmy
+		lastName: Chen
+		color: #ff0000
+		position: 0
+		
+	-	firstName: Jimmy
+		lastName: Chen
+		color: #ff0000
+		position: 0

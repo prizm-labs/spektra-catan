@@ -1,0 +1,25 @@
+{ 
+	"players": [
+	{
+		"first_name": "Jimmy",
+		"last_name": "Chen",
+		"color": "#ff0000",
+		"position": 0
+	},
+		{
+		"first_name": "Michael",
+		"last_name": "Garrido",
+		"color": "#0000ff",
+		"position": 1
+	}
+	],
+
+    "games":[
+
+        {
+            "current_turn":0,
+            "players": []
+        }
+
+    ]
+}

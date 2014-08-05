@@ -1,0 +1,16 @@
+{ 
+	"users": [ 
+	{
+		"firstName": "Jimmy",
+		"lastName": "Chen",
+		"color": "#ff0000",
+		"position": 0
+	},
+		{
+		"firstName": "Michael",
+		"lastName": "Garrido",
+		"color": "#0000ff",
+		"position": 1
+	}
+	]
+}
