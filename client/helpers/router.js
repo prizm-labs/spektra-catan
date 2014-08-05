@@ -41,11 +41,40 @@ Router.map(function() {
 
     this.route('homepage', {
         path: '/',
+        waitOn: function(){
+            return Meteor.subscribe('allGames');
+        },
+        action: function () {
+            if (this.ready()) {
+
+                this.render();
+
+                var currentGame = Session.get('currentGame') || null;
+
+                if (currentGame){
+                    GameSession.loadGame(currentGame);
+                } else {
+                    console.log("No game set");
+                }
+
+                var currentPlayer = Session.get('currentPlayer') || null;
+
+                if (currentPlayer){
+                    GameSession.setPlayer(currentPlayer);
+                } else {
+                    console.log("No player set");
+                }
+
+            }
+
+        },
         data: function(){
             return {
-                session: GameSession.data,
-                game: Games.find().fetch()[0],
-                games: Games.find().fetch()
+                game: GameSession.data,
+                player: GameSession.player,
+
+                games: Games.find().fetch(),
+                players: Players.find().fetch()
             }
         }
     });

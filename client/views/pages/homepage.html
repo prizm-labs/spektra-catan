@@ -1,6 +1,13 @@
 <template name="homepage">
   <h2>Welcome to the homepage!</h2>
 
+    Players:
+    <ul>
+        {{#each players}}
+        {{> playerItem}}
+        {{/each}}
+    </ul>
+
     Active Games:
     <ul>
        {{#each games}}
@@ -8,19 +15,31 @@
         {{/each}}
     </ul>
 
+    Game Info:
   <p>
-      Game Info:
-      currentTurn: {{ game.current_turn }}
+      current game: {{game._id}}
+      current turn: {{ game.current_turn }}
   </p>
+    <p>
+        players:
+
+    </p>
+
+    Session Info:
    <p>
-      Session Info:
+      current player: {{ player._id}}, {{ player.first_name}} {{player.last_name}}
     </p>
 </template>
 
+<template name="playerItem">
+    <li class="player">
+            <h3><a href="#" class="setPlayer">{{_id}}</a></h3>
+    </li>
+</template>
+
+
 <template name="gameItem">
     <li class="game">
-        <div class="game-content">
             <h3><a href="#" class="loadGame">{{_id}}</a></h3>
-        </div>
     </li>
 </template>

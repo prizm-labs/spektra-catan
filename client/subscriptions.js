@@ -7,13 +7,13 @@ if (Meteor.isClient) {
     Meteor.subscribe('allPlayers');
     Meteor.subscribe('allGames',function onReady(){
 
-        var currentGame = Session.get('currentGame') || null;
-
-        if (currentGame){
-            GameSession.loadGame(currentGame);
-        } else {
-            console.log("No game found");
-        }
+//        var currentGame = Session.get('currentGame') || null;
+//
+//        if (currentGame){
+//            GameSession.loadGame(currentGame);
+//        } else {
+//            console.log("No game found");
+//        }
     });
 
 //Meteor.subscribe('allItems');
