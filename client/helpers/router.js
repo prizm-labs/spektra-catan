@@ -37,6 +37,19 @@ Router.onBeforeAction(filters.myFilter, {only: ['items']});
 
 Router.map(function() {
 
+    // Pages
+
+    this.route('homepage', {
+        path: '/',
+        data: function(){
+            return {
+                session: GameSession.data,
+                game: Games.find().fetch()[0],
+                games: Games.find().fetch()
+            }
+        }
+    });
+
   // Items
 
   this.route('items', {
@@ -63,16 +76,7 @@ Router.map(function() {
   });
 
 
-  // Pages
 
-  this.route('homepage', {
-    path: '/',
-      data: function(){
-          return {
-              session: GameSession.data
-          }
-      }
-  });
 
   this.route('content');
 

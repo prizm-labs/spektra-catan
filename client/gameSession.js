@@ -1,22 +1,38 @@
 /**
  * Created by dodeca on 8/4/14.
  */
-var sessionData = Session.get('gameSession') || {currentTurn:0};
+var currentGame = null;
 
 GameSession = function(){
 }
-GameSession.data = new ReactiveDictionary(sessionData);
+GameSession.data = null;
 
 GameSession.cache = function(){
     Session.set('gameSession',GameSession.data);
 }
 
 GameSession.advanceTurn = function() {
-    GameSession.data.currentTurn+=1;
-    console.log('advanceTurn',GameSession.data.currentTurn);
-    GameSession.cache();
+    GameSession.data.current_turn+=1;
+    console.log('advanceTurn',GameSession.data.current_turn);
+    //GameSession.cache();
+
+    Games.update(currentGame._id, {$inc: {current_turn:1} })
 }
 
 GameSession.addPlayer = function(player_id){
 
+}
+
+GameSession.loadGame = function(gameId) {
+    console.log('loadGame',gameId);
+
+    //TODO get via gameData ID lookup
+    //var targetGame = Games.findOne(gameId).fetch();
+    var targetGame = Games.find(gameId).fetch()[0];
+    console.log(targetGame);
+
+    currentGame = targetGame;
+    GameSession.data = new ReactiveDictionary(currentGame);
+
+    Session.set('currentGame',currentGame);
 }
