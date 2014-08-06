@@ -9,6 +9,10 @@ GameSession = (function(){
         this.game = null; //Game, Reactive Dictionary
         this.player = null; //Player, Reactive Dictionary
         this.actions = null; //Actions, Reactive Collection
+
+        this.phase = null;
+
+
         this.isMyTurn = false;
     }
 
@@ -59,9 +63,9 @@ GameSession = (function(){
         console.log('advancePhase',PHASES);
 
         var currentPhase = currentGame.phase+1;
-//    if (currentPhase==PHASES.length){
-//        currentPhase=0;
-//    }
+//        if (currentPhase==PHASES.length){
+//            currentPhase=0;
+//        }
         console.log('current phase',currentPhase);
 
         Games.update(currentGame._id, {$set:{phase:currentPhase}});
@@ -71,7 +75,7 @@ GameSession = (function(){
 
     GameSession.prototype.advanceTurn = function() {
 
-        Games.update(currentGame._id, {$inc: {current_turn:1} });
+        Games.update(currentGame._id, {$inc: {turn:1} });
 
         var currentPosition = currentGame.position+1;
         if (currentPosition==currentGame.players.length){
@@ -82,7 +86,7 @@ GameSession = (function(){
         Games.update(currentGame._id, {$set:{position:currentPosition,phase:0}});
 
         //GameSession.data.current_turn = currentGame.current_turn;
-        console.log('advanceTurn',this.game.current_turn);
+        console.log('advanceTurn',this.game.turn);
     }
 
     GameSession.prototype.setPlayer = function(playerId){
@@ -94,6 +98,8 @@ GameSession = (function(){
         this.player = new ReactiveDictionary(targetPlayer);
 
         Session.set('currentPlayer',targetPlayer._id);
+
+        this.setMyTurn();
     }
 
     GameSession.prototype.loadGame = function(gameId) {
@@ -107,7 +113,7 @@ GameSession = (function(){
 
         Session.set('currentGame',currentGame._id);
 
-        this.setMyTurn();
+        this.phase = PHASES[this.game.phase];
     }
 
     GameSession.prototype.loadActions = function(actions) {
