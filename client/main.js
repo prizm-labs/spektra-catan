@@ -7,15 +7,16 @@ Global client-side code. Loads last.
 /+ ---------------------------------------------------- */
 
 //
+GS = new GameSession();
 
-GameSession.init = function(){
+GS.init = function(){
 
-    GameSession.diceRoller = new DiceRoller();
+    GS.createDiceRoller();
 
-    GameSession.diceRoller.addDie(6);
-    GameSession.diceRoller.addDie(6);
-
+    //setup 2 D6 dice
+    GS.diceRoller.addDie([1,2,3,4,5,6]);
+    GS.diceRoller.addDie([1,2,3,4,5,6]);
 }
 
 
-GameSession.init();
+GS.init();

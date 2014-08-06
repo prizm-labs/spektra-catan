@@ -42,7 +42,7 @@ Router.map(function() {
     this.route('homepage', {
         path: '/',
         waitOn: function(){
-            return Meteor.subscribe('allGames');
+            return Meteor.subscribe('allGames') && Meteor.subscribe('gameActions');
         },
         action: function () {
             if (this.ready()) {
@@ -71,6 +71,9 @@ Router.map(function() {
             return {
                 game: GS.game,
                 player: GS.player,
+
+                actions: Actions.find().fetch(),
+                //actions: GS.actions,
 
                 games: Games.find().fetch(),
                 players: Players.find().fetch()

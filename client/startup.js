@@ -4,10 +4,9 @@
 
 Meteor.startup(function () {
 
-    console.log('Client startup');
-
-    GS = new GameSession();
-
-    console.log('GameSession',GS);
-
+//    console.log('Client startup');
+//
+//    GS = new GameSession();
+//
+//    console.log('GameSession',GS);
 });

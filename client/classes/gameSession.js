@@ -4,30 +4,50 @@
 
 GameSession = (function(){
 
-    function GameSession(){}
-
-    var currentGame = null;
-
-    GameSession.instant = null; //UI configuration
-    GameSession.game = null; //Game
-    GameSession.player = null;
-
-    GameSession.cache = function(){
-        Session.set('gameSession',GameSession.data);
+    function GameSession(){
+        this.instant = null; //UI configuration
+        this.game = null; //Game, Reactive Dictionary
+        this.player = null; //Player, Reactive Dictionary
+        this.actions = null; //Actions, Reactive Collection
     }
 
-    GameSession.prototype.performAction = function( actionKey ){
+    var currentGame = null; //Meteor Collection object
+
+//    GameSession.cache = function(){
+//        Session.set('gameSession',GameSession.data);
+//    }
+
+    GameSession.prototype.createDiceRoller = function(){
+        this.diceRoller = new DiceRoller();
+    }
+
+    GameSession.prototype.performAction = function( actionKey, options ){
+
+        var data;
 
         switch(actionKey){
 
             case 'roll':
-
-
+                var roll = this.diceRoller.rollDice(true);
+                data = roll;
                 break;
-
-
         }
 
+        //create action record
+        //player, type, details
+        var action = {
+            game: Session.get('currentGame'),
+            player: Session.get('currentPlayer'),
+            type: actionKey,
+            data: data
+        }
+
+        console.log('action record',action);
+        Actions.insert(action);
+    }
+
+    GameSession.prototype.getCurrentGame = function(){
+        return currentGame;
     }
 
     GameSession.prototype.advancePhase = function() {
@@ -41,7 +61,7 @@ GameSession = (function(){
 
         Games.update(currentGame._id, {$set:{phase:currentPhase}});
 
-        console.log('advancePhase',GameSession.game.phase);
+        console.log('advancePhase',this.game.phase);
     }
 
     GameSession.prototype.advanceTurn = function() {
@@ -81,6 +101,11 @@ GameSession = (function(){
         this.game = new ReactiveDictionary(currentGame);
 
         Session.set('currentGame',currentGame._id);
+    }
+
+    GameSession.prototype.loadActions = function(actions) {
+        console.log('loadActions');
+        this.actions = new ReactiveList(actions);
     }
 
 

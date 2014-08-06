@@ -30,5 +30,6 @@ Meteor.publish('allGames', function() {
 
 
 Meteor.publish('gameActions', function() {
-    return Actions.find({game_id:Session.get('currentGame')});
+    return Actions.find();
+    //return Actions.find({game:Session.get('currentGame')});
 });

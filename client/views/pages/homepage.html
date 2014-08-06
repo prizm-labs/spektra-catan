@@ -1,58 +1,78 @@
 <template name="homepage">
-  <h2>Welcome to the homepage!</h2>
+    <h2>Welcome to the homepage!</h2>
 
-    Players:
-    <ul>
-        {{#each players}}
-        {{> playerItem}}
-        {{/each}}
-    </ul>
+    <div class="debug">
+        Players:
+        <ul>
+            {{#each players}}
+            {{> playerItem}}
+            {{/each}}
+        </ul>
 
-    Active Games:
-    <ul>
-       {{#each games}}
-        {{> gameItem}}
-        {{/each}}
-    </ul>
+        Active Games:
+        <ul>
+            {{#each games}}
+            {{> gameItem}}
+            {{/each}}
+        </ul>
+
+        <h3>Game Info</h3>
+        <p>
+            current game: {{game._id}},
+            current turn: {{ game.turn }},
+            position: {{game.position}},
+            phase: {{game.phase}}
+        </p>
+
+        Session Info:
+        <p style="color:{{player.color}}">
+            current player: {{ player._id}}, {{ player.first_name}} {{player.last_name}}
+        </p>
+    </div>
+
 
     <hr/>
 
-    Player Actions:
+    <h3>Player Actions:</h3>
     {{> playerActions}}
 
-    Game Info:
-  <p>
-      current game: {{game._id}},
-      current turn: {{ game.current_turn }},
-      position: {{game.position}},
-      phase: {{game.phase}}
-  </p>
-    <p>
-        players:
+    <h3>Actions:</h3>
+    <ul class="actions">
+        {{#each actions}}
+        {{> actionHistoryItem}}
+        {{/each}}
+    </ul>
+    <!--{{> actionHistory}}-->
 
-    </p>
-
-    Session Info:
-   <p>
-      current player: {{ player._id}}, {{ player.first_name}} {{player.last_name}}
-    </p>
 </template>
 
-        <template name="playerActions">
-            <button id="rollDice">Roll Dice</button>
-            <button id="advancePhase">Advance phase</button>
-            <button id="endTurn">End Turn</button>
-        </template>
+<template name="actionHistory">
+    <ul class="actions">
+        {{#each actions}}
+            {{> actionHistoryItem}}
+        {{/each}}
+    </ul>
+</template>
+
+<template name="actionHistoryItem">
+    <li class="action action-{{type}}">{{player}}, {{type}}, {{data.sum}}</li>
+</template>
+
+<template name="playerActions">
+    <button id="rollDice">Roll Dice</button>
+    <button id="advancePhase">Advance phase</button>
+    <button id="endTurn">End Turn</button>
+</template>
 
 <template name="playerItem">
     <li class="player">
-            <h3><a href="#" class="setPlayer">{{_id}}</a></h3>
+        <h3><a href="#" class="setPlayer">{{_id}}</a></h3>
     </li>
 </template>
 
 
 <template name="gameItem">
     <li class="game">
-            <h3><a href="#" class="loadGame">{{_id}}</a></h3>
+        <h3><a href="#" class="loadGame">{{_id}}</a></h3>
     </li>
 </template>

@@ -1,23 +1,36 @@
-{ 
-	"players": [
-	{
-		"first_name": "Jimmy",
-		"last_name": "Chen",
-		"color": "#ff0000",
-		"position": 0
-	},
-		{
-		"first_name": "Michael",
-		"last_name": "Garrido",
-		"color": "#0000ff",
-		"position": 1
-	}
-	],
+{
+    "players": [
+        {
+            "first_name": "Jimmy",
+            "last_name": "Chen",
+            "color": "#ff0000",
+            "position": 0
+        },
+        {
+            "first_name": "Michael",
+            "last_name": "Garrido",
+            "color": "#0000ff",
+            "position": 1
+        },
+        {
+            "first_name": "Brandon",
+            "last_name": "Williams",
+            "color": "#ff0000",
+            "position": 2
+        },
+        {
+            "first_name": "Jonathan",
+            "last_name": "Gaurano",
+            "color": "#0000ff",
+            "position": 3
+        }
+    ],
 
     "games":[
 
         {
-            "current_turn":0,
+            "turn":0,
+            "phase":0,
             "position": 0,
             "players": []
         }
