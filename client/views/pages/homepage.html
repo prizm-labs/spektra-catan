@@ -1,5 +1,4 @@
 <template name="homepage">
-    <h2>Welcome to the homepage!</h2>
 
     <div class="debug">
         Players:
@@ -30,6 +29,7 @@
         </p>
     </div>
 
+    {{> turnSummary}}
 
     <hr/>
 
@@ -46,10 +46,15 @@
 
 </template>
 
+<template name="turnSummary">
+    {{game.position}} / {{player.position}}
+    {{session.isMyTurn}}
+</template>
+
 <template name="actionHistory">
     <ul class="actions">
         {{#each actions}}
-            {{> actionHistoryItem}}
+        {{> actionHistoryItem}}
         {{/each}}
     </ul>
 </template>

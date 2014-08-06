@@ -9,6 +9,7 @@ GameSession = (function(){
         this.game = null; //Game, Reactive Dictionary
         this.player = null; //Player, Reactive Dictionary
         this.actions = null; //Actions, Reactive Collection
+        this.isMyTurn = false;
     }
 
     var currentGame = null; //Meteor Collection object
@@ -16,6 +17,10 @@ GameSession = (function(){
 //    GameSession.cache = function(){
 //        Session.set('gameSession',GameSession.data);
 //    }
+
+    GameSession.prototype.setMyTurn = function(){
+        this.isMyTurn = (this.game.position===this.player.position);
+    }
 
     GameSession.prototype.createDiceRoller = function(){
         this.diceRoller = new DiceRoller();
@@ -101,6 +106,8 @@ GameSession = (function(){
         this.game = new ReactiveDictionary(currentGame);
 
         Session.set('currentGame',currentGame._id);
+
+        this.setMyTurn();
     }
 
     GameSession.prototype.loadActions = function(actions) {

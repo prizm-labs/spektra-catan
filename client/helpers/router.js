@@ -69,6 +69,7 @@ Router.map(function() {
         },
         data: function(){
             return {
+                session: GS,
                 game: GS.game,
                 player: GS.player,
 

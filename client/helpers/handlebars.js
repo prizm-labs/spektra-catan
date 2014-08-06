@@ -46,3 +46,11 @@ Template.playerActions.events = {
         GS.advanceTurn();
     }
 }
+
+Template.turnSummary.helpers({
+   isMyTurn: function(data){
+       console.log('isMyTurn',data);
+
+       return true;
+   }
+});
