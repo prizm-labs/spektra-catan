@@ -27,3 +27,8 @@ Meteor.publish('allPlayers', function() {
 Meteor.publish('allGames', function() {
     return Games.find();
 });
+
+
+Meteor.publish('gameActions', function() {
+    return Actions.find({game_id:Session.get('currentGame')});
+});

@@ -52,7 +52,7 @@ Router.map(function() {
                 var currentGame = Session.get('currentGame') || null;
 
                 if (currentGame){
-                    GameSession.loadGame(currentGame);
+                    GS.loadGame(currentGame);
                 } else {
                     console.log("No game set");
                 }
@@ -60,18 +60,17 @@ Router.map(function() {
                 var currentPlayer = Session.get('currentPlayer') || null;
 
                 if (currentPlayer){
-                    GameSession.setPlayer(currentPlayer);
+                    GS.setPlayer(currentPlayer);
                 } else {
                     console.log("No player set");
                 }
 
             }
-
         },
         data: function(){
             return {
-                game: GameSession.data,
-                player: GameSession.player,
+                game: GS.game,
+                player: GS.player,
 
                 games: Games.find().fetch(),
                 players: Players.find().fetch()

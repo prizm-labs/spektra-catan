@@ -15,10 +15,17 @@
         {{/each}}
     </ul>
 
+    <hr/>
+
+    Player Actions:
+    {{> playerActions}}
+
     Game Info:
   <p>
-      current game: {{game._id}}
-      current turn: {{ game.current_turn }}
+      current game: {{game._id}},
+      current turn: {{ game.current_turn }},
+      position: {{game.position}},
+      phase: {{game.phase}}
   </p>
     <p>
         players:
@@ -30,6 +37,12 @@
       current player: {{ player._id}}, {{ player.first_name}} {{player.last_name}}
     </p>
 </template>
+
+        <template name="playerActions">
+            <button id="rollDice">Roll Dice</button>
+            <button id="advancePhase">Advance phase</button>
+            <button id="endTurn">End Turn</button>
+        </template>
 
 <template name="playerItem">
     <li class="player">

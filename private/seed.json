@@ -18,6 +18,7 @@
 
         {
             "current_turn":0,
+            "position": 0,
             "players": []
         }
 

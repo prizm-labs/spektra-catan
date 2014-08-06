@@ -17,7 +17,7 @@ Template.gameItem.events = {
         console.log(template);
         //console.log(GameSession.data._id);
 
-        GameSession.loadGame(template.data._id);
+        GS.loadGame(template.data._id);
     }
 }
 
@@ -28,6 +28,21 @@ Template.playerItem.events = {
         console.log(template);
         //console.log(GameSession.data._id);
 
-        GameSession.setPlayer(template.data._id);
+        GS.setPlayer(template.data._id);
+    }
+}
+
+Template.playerActions.events = {
+
+    "click button#rollDice": function(){
+        GS.performAction('roll');
+    },
+
+    "click button#advancePhase": function(){
+        GS.advancePhase();
+    },
+
+    "click button#endTurn": function(){
+        GS.advanceTurn();
     }
 }
