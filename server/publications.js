@@ -29,7 +29,7 @@ Meteor.publish('allGames', function() {
 });
 
 
-Meteor.publish('gameActions', function() {
-    return Actions.find();
-    //return Actions.find({game:Session.get('currentGame')});
+Meteor.publish('gameActions', function(gameId) {
+    //return Actions.find();
+    return Actions.find({game:gameId});
 });

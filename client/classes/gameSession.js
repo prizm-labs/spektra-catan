@@ -114,6 +114,8 @@ GameSession = (function(){
         Session.set('currentGame',currentGame._id);
 
         this.phase = PHASES[this.game.phase];
+
+        //this.loadActions()
     }
 
     GameSession.prototype.loadActions = function(actions) {

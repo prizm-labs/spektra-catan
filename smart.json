@@ -1,8 +1,12 @@
 {
-  "meteor": {},
-  "packages": {
-    "iron-router": {},
-    "npm": {},
-    "reactive-extra": {}
-  }
+    "meteor": {},
+    "packages": {
+        "iron-router": {},
+        "npm": {},
+        "reactive-extra": {},
+        "reactive-class": {},
+        "prizm-core": {
+            "path": "../prizm-core"
+        }
+    }
 }

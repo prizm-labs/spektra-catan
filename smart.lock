@@ -4,7 +4,11 @@
     "basePackages": {
       "iron-router": {},
       "npm": {},
-      "reactive-extra": {}
+      "reactive-extra": {},
+      "reactive-class": {},
+      "prizm-core": {
+        "path": "../prizm-core"
+      }
     },
     "packages": {
       "iron-router": {
@@ -21,6 +25,14 @@
         "git": "https://github.com/boekkooi/reactive-extra.git",
         "tag": "v0.1.0",
         "commit": "1b9748024538903d931253146f2901ca74a5efbc"
+      },
+      "reactive-class": {
+        "git": "https://github.com/lingz/meteor-reactive-class.git",
+        "tag": "v1.2.0",
+        "commit": "0a92a2d22139e9d35124ccd5af1d5ac16d8f8f54"
+      },
+      "prizm-core": {
+        "path": "../prizm-core"
       },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",
