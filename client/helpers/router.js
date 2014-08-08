@@ -37,6 +37,32 @@ Router.onBeforeAction(filters.myFilter, {only: ['items']});
 
 Router.map(function() {
 
+
+    // Game Board
+
+    this.route('board', {
+        path: '/board',
+        action: function(){
+
+            this.render();
+
+        },
+        data: function(){
+            return {
+                games: Games.find().fetch(),
+                players: Players.find().fetch()
+            }
+        },
+        onAfterAction: function(){
+
+        },
+        onRun: function(){
+            Crafty.init(500,350, document.getElementById('game'));
+
+            Crafty.e('2D, Canvas, Color').attr({x: 0, y: 0, w: 100, h: 100}).color('#F00');
+        }
+    });
+
     // Pages
 
     this.route('homepage', {

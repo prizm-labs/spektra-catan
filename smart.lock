@@ -8,6 +8,9 @@
       "reactive-class": {},
       "prizm-core": {
         "path": "../prizm-core"
+      },
+      "prizm-craftyjs": {
+        "path": "../prizm-craftyjs"
       }
     },
     "packages": {
@@ -33,6 +36,9 @@
       },
       "prizm-core": {
         "path": "../prizm-core"
+      },
+      "prizm-craftyjs": {
+        "path": "../prizm-craftyjs"
       },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",

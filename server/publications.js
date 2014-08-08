@@ -30,6 +30,8 @@ Meteor.publish('allGames', function() {
 
 
 Meteor.publish('gameActions', function(gameId) {
+
+    console.log()
     //return Actions.find();
     return Actions.find({game:gameId});
 });

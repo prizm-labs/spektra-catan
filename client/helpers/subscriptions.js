@@ -15,9 +15,7 @@ if (Meteor.isClient) {
 //            console.log("No game found");
 //        }
     });
-    Meteor.subscribe('gameActions', Session.get('currentGame'), function onReady(){
-        //GS.loadActions(Actions.find().fetch());
-    });
+    //Meteor.subscribe('gameActions', Session.get('currentGame'));
 
 //Meteor.subscribe('allItems');
 }

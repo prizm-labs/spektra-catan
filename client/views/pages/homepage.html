@@ -1,34 +1,5 @@
 <template name="homepage">
 
-    <div class="debug">
-        Players:
-        <ul>
-            {{#each players}}
-            {{> playerItem}}
-            {{/each}}
-        </ul>
-
-        Active Games:
-        <ul>
-            {{#each games}}
-            {{> gameItem}}
-            {{/each}}
-        </ul>
-
-        <h3>Game Info</h3>
-        <p>
-            current game: {{game._id}},
-            current turn: {{ game.turn }},
-            position: {{game.position}},
-            phase: {{game.phase}}
-        </p>
-
-        Session Info:
-        <p style="color:{{player.color}}">
-            current player: {{ player._id}}, {{ player.first_name}} {{player.last_name}}
-        </p>
-    </div>
-
     {{> turnSummary}}
 
     <hr/>
@@ -38,7 +9,7 @@
     {{> playerActions}}
     {{/if}}
 
-    <h3>Action History:</h3>
+    <h3>Action ahfaoifhaiufgaiufgai:</h3>
     <ul class="actions">
         {{#each actions}}
         {{> actionHistoryItem}}
@@ -94,11 +65,7 @@
     </p>
 </template>
 
-<template name="playerItem">
-    <li class="player">
-        <h3><a href="#" class="setPlayer">{{_id}}</a></h3>
-    </li>
-</template>
+
 
 
 <template name="gameItem">

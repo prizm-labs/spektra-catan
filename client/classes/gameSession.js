@@ -116,6 +116,7 @@ GameSession = (function(){
         this.phase = PHASES[this.game.phase];
 
         //this.loadActions()
+        Meteor.subscribe('gameActions', Session.get('currentGame'));
     }
 
     GameSession.prototype.loadActions = function(actions) {

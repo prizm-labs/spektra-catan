@@ -7,6 +7,9 @@
         "reactive-class": {},
         "prizm-core": {
             "path": "../prizm-core"
+        },
+        "prizm-craftyjs": {
+            "path": "../prizm-craftyjs"
         }
     }
 }
