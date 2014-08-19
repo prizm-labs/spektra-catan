@@ -2,7 +2,7 @@
 
 ## Main ##
 
-Global client-side code. Loads last. 
+Global client-side code. Loads last.
 
 /+ ---------------------------------------------------- */
 
@@ -17,6 +17,5 @@ GS.init = function(){
     GS.diceRoller.addDie([1,2,3,4,5,6]);
     GS.diceRoller.addDie([1,2,3,4,5,6]);
 }
-
 
 GS.init();

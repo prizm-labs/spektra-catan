@@ -1,15 +1,21 @@
 {
     "meteor": {},
     "packages": {
-        "iron-router": {},
         "npm": {},
         "reactive-extra": {},
         "reactive-class": {},
         "prizm-core": {
             "path": "../prizm-core"
         },
+        "prizm-babylonjs": {
+            "path": "../prizm-babylonjs"
+        },
+        "prizm-phaser": {
+            "path": "../prizm-phaser"
+        },
         "prizm-craftyjs": {
             "path": "../prizm-craftyjs"
-        }
+        },
+        "iron-router": {}
     }
 }
