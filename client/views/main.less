@@ -12,9 +12,17 @@ body {
   padding: 0;
 }
 
+#phaser canvas {
+//  display: none !important;
+//  background-color: rgba(1,0,0,1) !important;
+  z-index: 1;
+}
+
 canvas#babylon {
   height: 1200px;
   width: 1200px;
+
+  z-index: 2;
 }
 
 canvas {
@@ -24,4 +32,11 @@ canvas {
   position: absolute !important;
 
   overflow: visible !important;
+}
+
+#fpsLabel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #000000;
 }
