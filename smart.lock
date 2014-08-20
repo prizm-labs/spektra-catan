@@ -5,6 +5,9 @@
       "npm": {},
       "reactive-extra": {},
       "reactive-class": {},
+      "iron-router": {
+        "version": "0.8.2"
+      },
       "prizm-core": {
         "path": "../prizm-core"
       },
@@ -13,11 +16,7 @@
       },
       "prizm-phaser": {
         "path": "../prizm-phaser"
-      },
-      "prizm-craftyjs": {
-        "path": "../prizm-craftyjs"
-      },
-      "iron-router": {}
+      }
     },
     "packages": {
       "npm": {
@@ -35,6 +34,11 @@
         "tag": "v1.2.0",
         "commit": "0a92a2d22139e9d35124ccd5af1d5ac16d8f8f54"
       },
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.8.2",
+        "commit": "05415a8891ea87a00fb1e2388585f2ca5a38e0da"
+      },
       "prizm-core": {
         "path": "../prizm-core"
       },
@@ -43,14 +47,6 @@
       },
       "prizm-phaser": {
         "path": "../prizm-phaser"
-      },
-      "prizm-craftyjs": {
-        "path": "../prizm-craftyjs"
-      },
-      "iron-router": {
-        "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.8.2",
-        "commit": "05415a8891ea87a00fb1e2388585f2ca5a38e0da"
       },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",

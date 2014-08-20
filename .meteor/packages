@@ -13,7 +13,6 @@ reactive-extra
 less
 reactive-class
 prizm-core
-prizm-craftyjs
 iron-router
 prizm-phaser
 prizm-babylonjs

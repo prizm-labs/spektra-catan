@@ -4,6 +4,9 @@
         "npm": {},
         "reactive-extra": {},
         "reactive-class": {},
+        "iron-router": {
+            "version": "0.8.2"
+        },
         "prizm-core": {
             "path": "../prizm-core"
         },
@@ -12,10 +15,6 @@
         },
         "prizm-phaser": {
             "path": "../prizm-phaser"
-        },
-        "prizm-craftyjs": {
-            "path": "../prizm-craftyjs"
-        },
-        "iron-router": {}
+        }
     }
 }
