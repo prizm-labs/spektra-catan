@@ -139,6 +139,59 @@ Template.board.rendered = function(){
 
     }
 
+    function createCard(size,position,scene) {
+
+        var card = {};
+
+        card.root = Babylon.Mesh.CreateSphere("sphere", 1, 1, scene);
+        var r = card.root;
+        r.isVisible = false;
+        r.position.y = position.y;
+        r.position.x = position.x;
+        r.position.z = position.z;
+
+        // Card
+        card.back = Babylon.Mesh.CreatePlane("card", size.width, scene, false);
+        var b = card.back;
+        b.material = new Babylon.StandardMaterial("card", scene);
+        b.material.diffuseColor = new Babylon.Color3(0.1, 0.1, 0.1);
+        b.material.specularColor = new Babylon.Color3(0.1, 0.1, 0.1);
+
+        b.material.diffuseTexture = new BABYLON.Texture("/img/resource-back.png", scene);
+        b.material.diffuseTexture.hasAlpha = true;
+        b.material.backFaceCulling = true;
+
+        b.scaling.y = size.height/size.width;
+        b.position.z = 2;
+        b.position.y = 0;
+
+        //https://github.com/BabylonJS/Babylon.js/wiki/How-to-handle-rotations-and-translations
+        //card.rotation.x = Math.PI/2;
+        //card.rotation = new BABYLON.Vector3(90, 0, 0); // Euler
+        //card.rotationQuaternion = new BABYLON.Quaternion(10, 0, 0, 0); // Quaternion
+
+
+        card.front = Babylon.Mesh.CreatePlane("card", size.width, scene, false);
+        var f = card.front;
+        f.material = new Babylon.StandardMaterial("card", scene);
+        f.material.diffuseColor = new Babylon.Color3(0.1, 0.1, 0.1);
+        f.material.specularColor = new Babylon.Color3(0.1, 0.1, 0.1);
+
+        f.material.diffuseTexture = new BABYLON.Texture("/img/resource-ore.png", scene);
+        f.material.diffuseTexture.hasAlpha = true;
+        f.material.backFaceCulling = true;
+
+        f.scaling.y = size.height/size.width;
+        f.position.z = 0;
+        f.position.y = 0;
+        f.rotation.y = Math.PI;
+
+        card.back.parent = card.root;
+        card.front.parent = card.root;
+
+        return card;
+    }
+
 
     function createScene(scene, imports) {
 
@@ -148,16 +201,16 @@ Template.board.rendered = function(){
         var city, settlement, road;
         var scaleFactor = 25;
 
-            _.each(imports,function(mesh){
+        _.each(imports,function(mesh){
 
-                var entity = mesh;
-                entity.material = new Babylon.StandardMaterial("default", scene);
-                entity.scaling.x =entity.scaling.x*scaleFactor;
-                entity.scaling.y =entity.scaling.y*scaleFactor;
-                entity.scaling.z =entity.scaling.z*scaleFactor;
+            var entity = mesh;
+            entity.material = new Babylon.StandardMaterial("default", scene);
+            entity.scaling.x =entity.scaling.x*scaleFactor;
+            entity.scaling.y =entity.scaling.y*scaleFactor;
+            entity.scaling.z =entity.scaling.z*scaleFactor;
 
-                meshes.push(entity);
-            });
+            meshes.push(entity);
+        });
 
         console.log(meshes);
 
@@ -232,41 +285,9 @@ Template.board.rendered = function(){
         ground.material.backFaceCulling = false;
 
 
-        var size = ENTITIES.card.size;
-        // Card
-        var card = Babylon.Mesh.CreatePlane("card", size.width, scene, false);
-        card.material = new Babylon.StandardMaterial("card", scene);
-        card.material.diffuseColor = new Babylon.Color3(0.1, 0.1, 0.1);
-        card.material.specularColor = new Babylon.Color3(0.1, 0.1, 0.1);
 
-        card.material.diffuseTexture = new BABYLON.Texture("/img/resource-back.png", scene);
-        card.material.diffuseTexture.hasAlpha = true;
-        card.material.backFaceCulling = true;
-
-        card.scaling.y = size.height/size.width;
-        card.position.z = 2;
-        card.position.y = 75;
-
-        //https://github.com/BabylonJS/Babylon.js/wiki/How-to-handle-rotations-and-translations
-        //card.rotation.x = Math.PI/2;
-        //card.rotation = new BABYLON.Vector3(90, 0, 0); // Euler
-        //card.rotationQuaternion = new BABYLON.Quaternion(10, 0, 0, 0); // Quaternion
-
-
-
-        var cardFront = Babylon.Mesh.CreatePlane("card", size.width, scene, false);
-        cardFront.material = new Babylon.StandardMaterial("card", scene);
-        cardFront.material.diffuseColor = new Babylon.Color3(0.1, 0.1, 0.1);
-        cardFront.material.specularColor = new Babylon.Color3(0.1, 0.1, 0.1);
-
-        cardFront.material.diffuseTexture = new BABYLON.Texture("/img/resource-ore.png", scene);
-        cardFront.material.diffuseTexture.hasAlpha = true;
-        cardFront.material.backFaceCulling = true;
-
-        cardFront.scaling.y = size.height/size.width;
-        cardFront.position.z = 0;
-        cardFront.position.y = 75;
-        cardFront.rotation.y = Math.PI;
+        // TEST card
+        var card = createCard(ENTITIES.card.size,{x:0,y:75,z:0},scene);
 
 
 
@@ -390,8 +411,7 @@ Template.board.rendered = function(){
             donut.position.z = 100 * Math.sin(alpha);
             alpha += 0.01;
 
-            card.rotation.x += 0.01;
-            cardFront.rotation.x -= 0.01;
+            card.root.rotation.x += 0.01;
         }
 
         scene.registerBeforeRender(function () {
