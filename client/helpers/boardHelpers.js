@@ -94,15 +94,9 @@ Template.board.rendered = function(){
 
 
 
-        canvas = document.getElementById("babylon");
-        engine = new Babylon.Engine(canvas, true);
 
-        var scene = createScene();
 
-        engine.runRenderLoop(function () {
-            scene.render();
-            fpsLabel.innerHTML = BABYLON.Tools.GetFps().toFixed() + " fps";
-        });
+        babylonCreate();
 
     }
 
@@ -113,11 +107,64 @@ Template.board.rendered = function(){
 
 
 
-    function createScene() {
 
+    function babylonCreate(){
 
+        canvas = document.getElementById("babylon");
+        engine = new Babylon.Engine(canvas, true);
 
         var scene = new Babylon.Scene(engine);
+        //var scene = createScene();
+
+        babylonImport(scene);
+        //babylonRender(scene);
+    }
+
+    function babylonImport(scene) {
+        BABYLON.SceneLoader.ImportMesh(null, "models/", "models.babylon", scene, function (newMeshes, particleSystems) {
+
+            console.log('new meshes:',newMeshes);
+
+            scene = createScene(scene,newMeshes);
+            babylonRender(scene);
+        });
+    }
+
+    function babylonRender(scene){
+
+        engine.runRenderLoop(function () {
+            scene.render();
+            fpsLabel.innerHTML = BABYLON.Tools.GetFps().toFixed() + " fps";
+        });
+
+    }
+
+
+    function createScene(scene, imports) {
+
+
+        var meshes = [];
+
+        var city, settlement, road;
+        var scaleFactor = 25;
+
+            _.each(imports,function(mesh){
+
+                var entity = mesh;
+                entity.material = new Babylon.StandardMaterial("default", scene);
+                entity.scaling.x =entity.scaling.x*scaleFactor;
+                entity.scaling.y =entity.scaling.y*scaleFactor;
+                entity.scaling.z =entity.scaling.z*scaleFactor;
+
+                meshes.push(entity);
+            });
+
+        console.log(meshes);
+
+        meshes[0].position.x = 50;
+        meshes[1].position.x = 150;
+        meshes[2].position.x = 250;
+
         var camera = new Babylon.ArcRotateCamera("Camera", 0, 0, 10, new Babylon.Vector3(0, 0, 0), scene);
         //var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, 0), scene);
         camera.setPosition(new BABYLON.Vector3(0, ARENA.size.height, -1));
@@ -226,31 +273,31 @@ Template.board.rendered = function(){
         var cubeWidth = 35;
 
         // Boxes
-        for (var i=1;i<10;i++) {
-            var redBox = Babylon.Mesh.CreateBox("red", cubeWidth, scene);
-            var redMat = new Babylon.StandardMaterial("ground", scene);
-            redMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
-            redMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
-            redMat.emissiveColor = Babylon.Color3.Red();
-            redBox.material = redMat;
-            redBox.position.x -= 100*i;
-
-            var greenBox = Babylon.Mesh.CreateBox("green", cubeWidth, scene);
-            var greenMat = new Babylon.StandardMaterial("ground", scene);
-            greenMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
-            greenMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
-            greenMat.emissiveColor = Babylon.Color3.Green();
-            greenBox.material = greenMat;
-            greenBox.position.z -= 100*i;
-
-            var blueBox = Babylon.Mesh.CreateBox("blue", cubeWidth, scene);
-            var blueMat = new Babylon.StandardMaterial("ground", scene);
-            blueMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
-            blueMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
-            blueMat.emissiveColor = Babylon.Color3.Blue();
-            blueBox.material = blueMat;
-            blueBox.position.x += 100*i;
-        }
+//        for (var i=1;i<10;i++) {
+//            var redBox = Babylon.Mesh.CreateBox("red", cubeWidth, scene);
+//            var redMat = new Babylon.StandardMaterial("ground", scene);
+//            redMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
+//            redMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
+//            redMat.emissiveColor = Babylon.Color3.Red();
+//            redBox.material = redMat;
+//            redBox.position.x -= 100*i;
+//
+//            var greenBox = Babylon.Mesh.CreateBox("green", cubeWidth, scene);
+//            var greenMat = new Babylon.StandardMaterial("ground", scene);
+//            greenMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
+//            greenMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
+//            greenMat.emissiveColor = Babylon.Color3.Green();
+//            greenBox.material = greenMat;
+//            greenBox.position.z -= 100*i;
+//
+//            var blueBox = Babylon.Mesh.CreateBox("blue", cubeWidth, scene);
+//            var blueMat = new Babylon.StandardMaterial("ground", scene);
+//            blueMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
+//            blueMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
+//            blueMat.emissiveColor = Babylon.Color3.Blue();
+//            blueBox.material = blueMat;
+//            blueBox.position.x += 100*i;
+//        }
 
 
 
