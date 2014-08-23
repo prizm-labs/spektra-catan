@@ -3,133 +3,63 @@
  */
 var BABYLON = Babylon;
 
-var willDrawBoardLayer = true;
+Environment3D = Environment;
 
-Babylon.DynamicTexture.prototype.drawCanvas = function (canvas, width, height, clearColor, invertY) {
-
-    if (!willDrawBoardLayer) return;
-    else willDrawBoardLayer = false;
-
-    var size = this.getSize();
-
-    //TODO center embedded canvas
-    //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D#drawImage()
-
-    this._context.clearRect(0,0,size.width,size.height);
-
-    //http://stackoverflow.com/questions/4405336/how-to-copy-contents-of-one-canvas-to-another-canvas-locally
-
-    this._context.drawImage(canvas,
-        0,0,
-        height,width,
-        0,0,
-        size.width,size.height);
-
-
-    this.update(invertY);
-};
-
-var engine,canvas;
-
-var fpsLabel = document.getElementById("fpsLabel");
-
-
-
-
-
-
-
-function babylonCreate(context2D){
-
-    canvas = document.getElementById("babylon");
-    engine = new Babylon.Engine(canvas, true);
-
-    var scene = new Babylon.Scene(engine);
-    //var scene = createScene();
-
-    babylonImport(scene);
-    //babylonRender(scene);
+function Environment(){
+    this.fpsLabel = null;
+    this.engine = null;
+    this.canvas = null;
+    this.contexts2D = {};
+    this.willRenderContext2D = true;
 }
 
-function babylonImport(scene) {
+Environment.prototype.setFpsLabel = function(id) {
+    this.fpsLabel = document.getElementById(id);
+};
+
+Environment.prototype.setCanvas = function(id) {
+    this.canvas = document.getElementById(id);
+};
+
+Environment.prototype.setContext2D = function(key,context) {
+  this.contexts2D[key] = context;
+};
+
+Environment.prototype.init = function () {
+
+    this.engine = new Babylon.Engine(this.canvas, true);
+
+    var scene = new Babylon.Scene(this.engine);
+    //var scene = createScene();
+
+    this.preload(scene);
+    //babylonRender(scene);
+};
+
+Environment.prototype.preload = function(scene) {
+    var self = this;
+
     BABYLON.SceneLoader.ImportMesh(null, "models/", "models.babylon", scene, function (newMeshes, particleSystems) {
 
         console.log('new meshes:',newMeshes);
 
-        scene = createScene(scene,newMeshes);
-        babylonRender(scene);
+        scene = self.createScene(scene,newMeshes,self.contexts2D['board']);
+        self.render(scene);
     });
-}
+};
 
-function babylonRender(scene){
-
-    engine.runRenderLoop(function () {
+Environment.prototype.render = function(scene){
+    var self = this;
+    this.engine.runRenderLoop(function () {
         scene.render();
-        fpsLabel.innerHTML = BABYLON.Tools.GetFps().toFixed() + " fps";
+
+        self.fpsLabel.innerHTML = BABYLON.Tools.GetFps().toFixed() + " fps";
     });
 
-}
+};
 
-function createCard(size,position,scene) {
-
-    var card = {};
-
-//        size.width = size.width/2;
-//        size.height = size.height/2;
-
-    // Parent
-    card.root = Babylon.Mesh.CreateSphere("sphere", 1, 1, scene);
-    var r = card.root;
-    r.isVisible = false;
-    r.position.y = position.y;
-    r.position.x = position.x;
-    r.position.z = position.z;
-
-    // Back
-    card.back = Babylon.Mesh.CreatePlane("card", size.width, scene, false);
-    var b = card.back;
-    b.material = new Babylon.StandardMaterial("card", scene);
-    b.material.diffuseColor = new Babylon.Color3(0.1, 0.1, 0.1);
-    b.material.specularColor = new Babylon.Color3(0.1, 0.1, 0.1);
-
-    b.material.diffuseTexture = new BABYLON.Texture("/img/resource-back.png", scene);
-    b.material.diffuseTexture.hasAlpha = true;
-    b.material.backFaceCulling = true;
-
-    b.scaling.y = size.height/size.width;
-    b.position.z = 2;
-    b.position.y = 0;
-
-    // Front
-    card.front = Babylon.Mesh.CreatePlane("card", size.width, scene, false);
-    var f = card.front;
-    f.material = new Babylon.StandardMaterial("card", scene);
-    f.material.diffuseColor = new Babylon.Color3(0.1, 0.1, 0.1);
-    f.material.specularColor = new Babylon.Color3(0.1, 0.1, 0.1);
-
-    f.material.diffuseTexture = new BABYLON.Texture("/img/resource-ore.png", scene);
-    f.material.diffuseTexture.hasAlpha = true;
-    f.material.backFaceCulling = true;
-
-    f.scaling.y = size.height/size.width;
-    f.position.z = 0;
-    f.position.y = 0;
-    f.rotation.y = Math.PI;
-
-    // Hierarchy
-    card.back.parent = card.root;
-    card.front.parent = card.root;
-
-    r.scaling.x = r.scaling.x*0.5;
-    r.scaling.y = r.scaling.y*0.5;
-    r.scaling.z = r.scaling.z*0.5;
-
-    return card;
-}
-
-
-function createScene(scene, imports, context2D) {
-
+Environment.prototype.createScene = function(scene, imports, context2D) {
+    var self = this;
 
     var meshes = [];
 
@@ -156,7 +86,7 @@ function createScene(scene, imports, context2D) {
     var camera = new Babylon.ArcRotateCamera("Camera", 0, 0, 10, new Babylon.Vector3(0, 0, 0), scene);
     //var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0, 0), scene);
     camera.setPosition(new BABYLON.Vector3(0, ARENA.size.height, -1));
-    camera.attachControl(canvas);
+    camera.attachControl(this.canvas);
 
 
     camera.lowerBetaLimit = 0.1;
@@ -356,10 +286,69 @@ function createScene(scene, imports, context2D) {
 
         // Check if Phaser 2D canvases are rendered before drawing to plane
         if (context2D.context) {
-            backgroundTexture.drawCanvas(context2D.canvas, ARENA.size.length, ARENA.size.width, null, null);
+            self.willRenderContext2D = backgroundTexture.drawCanvas(context2D.canvas, ARENA.size.length, ARENA.size.width, true);
         }
 
     });
 
     return scene;
+};
+
+function createCard(size,position,scene) {
+
+    var card = {};
+
+//        size.width = size.width/2;
+//        size.height = size.height/2;
+
+    // Parent
+    card.root = Babylon.Mesh.CreateSphere("sphere", 1, 1, scene);
+    var r = card.root;
+    r.isVisible = false;
+    r.position.y = position.y;
+    r.position.x = position.x;
+    r.position.z = position.z;
+
+    // Back
+    card.back = Babylon.Mesh.CreatePlane("card", size.width, scene, false);
+    var b = card.back;
+    b.material = new Babylon.StandardMaterial("card", scene);
+    b.material.diffuseColor = new Babylon.Color3(0.1, 0.1, 0.1);
+    b.material.specularColor = new Babylon.Color3(0.1, 0.1, 0.1);
+
+    b.material.diffuseTexture = new BABYLON.Texture("/img/resource-back.png", scene);
+    b.material.diffuseTexture.hasAlpha = true;
+    b.material.backFaceCulling = true;
+
+    b.scaling.y = size.height/size.width;
+    b.position.z = 2;
+    b.position.y = 0;
+
+    // Front
+    card.front = Babylon.Mesh.CreatePlane("card", size.width, scene, false);
+    var f = card.front;
+    f.material = new Babylon.StandardMaterial("card", scene);
+    f.material.diffuseColor = new Babylon.Color3(0.1, 0.1, 0.1);
+    f.material.specularColor = new Babylon.Color3(0.1, 0.1, 0.1);
+
+    f.material.diffuseTexture = new BABYLON.Texture("/img/resource-ore.png", scene);
+    f.material.diffuseTexture.hasAlpha = true;
+    f.material.backFaceCulling = true;
+
+    f.scaling.y = size.height/size.width;
+    f.position.z = 0;
+    f.position.y = 0;
+    f.rotation.y = Math.PI;
+
+    // Hierarchy
+    card.back.parent = card.root;
+    card.front.parent = card.root;
+
+    r.scaling.x = r.scaling.x*0.5;
+    r.scaling.y = r.scaling.y*0.5;
+    r.scaling.z = r.scaling.z*0.5;
+
+    return card;
 }
+
+
