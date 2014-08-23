@@ -21,6 +21,48 @@ Mapping2D.prototype.update = function(){
 };
 
 
+function Factory3D ( scene ) {
+    this.scene = scene;
+    this.meshes = {};
+    this.scaleFactor = 1;
+}
+
+Factory3D.prototype.make = function(meshKey,material){
+
+    var clone = this.meshes[meshKey].clone(meshKey+'_'+Date.now());
+
+    clone.isVisible = true;
+
+    console.log(clone);
+
+    return clone;
+};
+
+Factory3D.prototype.load = function(imports, scaleFactor){
+    var self = this;
+
+    if (scaleFactor) this.scaleFactor = scaleFactor;
+
+
+    _.each(imports,function(mesh){
+
+        var clone = mesh;
+        clone.material = new Babylon.StandardMaterial("default", self.scene);
+        clone.scaling.x = clone.scaling.x*self.scaleFactor;
+        clone.scaling.y = clone.scaling.y*self.scaleFactor;
+        clone.scaling.z = clone.scaling.z*self.scaleFactor;
+        clone.position.x = 0;
+        clone.position.y = 0;
+        clone.position.z = 0;
+        clone.isVisible = false;
+
+        self.meshes[mesh.id] = clone;
+    });
+
+    console.log('factory load'+self.meshes);
+};
+
+
 function Environment(){
 
     this.engine = null;
@@ -32,6 +74,8 @@ function Environment(){
     this.mappings2D = [];
 
     this.fpsLabel = null;
+
+    this.factory = null;
 }
 
 Environment.prototype.setFpsLabel = function(id) {
@@ -58,22 +102,27 @@ Environment.prototype.init = function () {
     this.scene = new Babylon.Scene(this.engine);
     //var scene = createScene();
 
-    this.preload();
+    this.preload("models/", "models.babylon", 25 );
     //babylonRender(scene);
 };
 
-Environment.prototype.preload = function() {
+Environment.prototype.preload = function( path, file, scaleFactor ) {
     var self = this;
 
-    BABYLON.SceneLoader.ImportMesh(null, "models/", "models.babylon", this.scene, function (newMeshes, particleSystems) {
+    BABYLON.SceneLoader.ImportMesh( null, path, file, this.scene,
+        function (imports, particleSystems) {
 
-        console.log('new meshes:',newMeshes);
+            console.log('new meshes:',imports);
 
-        self.scene = self.create(newMeshes,self.contexts2D['tabletop']);
+            self.factory = new Factory3D( self.scene );
+            self.factory.load( imports, scaleFactor );
 
-        self.registerBeforeRender();
-        self.render();
-    });
+            self.scene = self.create();
+
+            self.registerBeforeRender();
+            self.render();
+        }
+    );
 };
 
 Environment.prototype.registerBeforeRender = function(){
@@ -202,7 +251,7 @@ Environment.prototype.make = {
     }
 };
 
-Environment.prototype.create = function (imports) {
+Environment.prototype.create = function () {
     var self = this;
 
     var scene = this.scene;
@@ -217,22 +266,8 @@ Environment.prototype.create = function (imports) {
         this.canvas
     ]);
 
-    var meshes = [];
-    var scaleFactor = 25;
-    _.each(imports,function(mesh){
 
-        var entity = mesh;
-        entity.material = new Babylon.StandardMaterial("default", scene);
-        entity.scaling.x =entity.scaling.x*scaleFactor;
-        entity.scaling.y =entity.scaling.y*scaleFactor;
-        entity.scaling.z =entity.scaling.z*scaleFactor;
-
-        meshes.push(entity);
-    });
-
-    meshes[0].position.x = 50;
-    meshes[1].position.x = 150;
-    meshes[2].position.x = 250;
+    var city = self.factory.make('city',null);
 
 
     var tabletop = self.make.tabletop.call(self,ARENA.size.length,ARENA.size.width,'tabletop');
