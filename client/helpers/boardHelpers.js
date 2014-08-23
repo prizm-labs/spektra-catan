@@ -46,7 +46,7 @@ Template.board.rendered = function(){
     var environment3D = new Environment3D();
     environment3D.setCanvas('babylon');
     environment3D.setFpsLabel('fpsLabel');
-    environment3D.setContext2D('board',environment2D.game);
+    environment3D.setContext2D('tabletop',environment2D.game);
 
     environment3D.init();
 
