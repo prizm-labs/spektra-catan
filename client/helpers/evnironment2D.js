@@ -40,8 +40,9 @@ Environment.prototype.addEntity = function (state, name, image, position) {
     console.log('entities',this.states[state].entities);
 };
 
-Environment.prototype.addState = function (name) {
+Environment.prototype.addState = function ( name, manifest ) {
     this.states[name] = new State();
+    this.states[name].setPreloadManifest(manifest);
 };
 
 // Add behavior to existing entity
@@ -52,19 +53,34 @@ Environment.prototype.addBehavior = function () {
 
 function State(game) {
     this.entities = [];
+    this.manifest = null;
 };
 
 
 State.prototype = {
+
+    // Prizm functions
+    setPreloadManifest: function( manifest ){
+        this.manifest = manifest;
+    },
+
+    // PhaserJS reserved "State" functions
     preload: function () {
         var self = this;
         console.log('preload', self);
 
-        //TODO preload all assets from sprite atlas
-        _.each(this.entities, function (entity) {
-            console.log('entity', entity);
-            self.game.load.image(entity.name,entity.image);
-        })
+
+//        _.each(this.entities, function (entity) {
+//            console.log('entity', entity);
+//            self.game.load.image(entity.name,entity.image);
+//        })
+
+        // Preload all assets from manifest
+        _.each( this.manifest.spritesheets, function( spritesheet )
+        {
+            var path = SYSTEM.paths.sprites + spritesheet.path;
+            self.game.load.spritesheet( spritesheet.name, path, spritesheet.width, spritesheet.height, spritesheet.frames );
+        });
 
     },
 
@@ -73,12 +89,14 @@ State.prototype = {
 
         console.log('create', self);
 
-        _.each(this.entities, function (entity) {
-            console.log('adding entity', entity);
-            var sprite = self.game.add.sprite(entity.position.x, entity.position.y, entity.name);
-            //var sprite = game.add.sprite(self.game.world.centerX, self.game.world.centerY,entity.name);
-            sprite.anchor.setTo(0.5, 0.5);
-        });
+        var terrain = new Terrain( 'mountains', self.game, {x:200,y:200} );
+
+//        _.each(this.entities, function (entity) {
+//            console.log('adding entity', entity);
+//            var sprite = self.game.add.sprite(entity.position.x, entity.position.y, entity.name);
+//            //var sprite = game.add.sprite(self.game.world.centerX, self.game.world.centerY,entity.name);
+//            sprite.anchor.setTo(0.5, 0.5);
+//        });
 
 
         //TODO callback to render 3D environment

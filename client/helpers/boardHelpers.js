@@ -35,8 +35,8 @@ Template.board.rendered = function(){
     // Create 2D contexts
     // from PhaserJS
     var environment2D = new Environment2D();
-    environment2D.addState('main');
-    environment2D.addEntity('main','desert','img/terrain-desert.png',{x:100,y:100});
+    environment2D.addState('main', MANIFEST.D2 );
+   //environment2D.addEntity('main','desert','img/terrain-desert.png',{x:100,y:100});
     environment2D.init();
 
 
