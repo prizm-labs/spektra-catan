@@ -65,49 +65,60 @@ Factory3D.prototype.load = function(imports, scaleFactor){
 
 function Environment(){
 
-    this.engine = null;
-    this.canvas = null;
-    this.scene = null;
+    this.scenes = {};
+
+}
+
+
+
+Environment.prototype.setCanvas = function( scene, id ) {
+    this.scenes[scene].canvas = document.getElementById(id);
+};
+
+
+Environment.prototype.addScene = function( name, canvas, onCreatedCallback ) {
+    this.scenes[name] = new Scene( canvas );
+    this.scenes[name].onCreatedCallback = onCreatedCallback;
+};
+
+Environment.prototype.setContext2D = function( scene, key, context ) {
+    this.scenes[scene].contexts2D[key] = context;
+};
+
+Environment.prototype.init = function( scene ) {
+
+    this.scenes[scene].setFpsLabel('fpsLabel');
+    this.scenes[scene].preload("models/", "models.babylon", 25 );
+};
+
+function Scene( canvas ){
+
+    this.canvas = document.getElementById(canvas);
+    this.engine = new Babylon.Engine(this.canvas, true);
+    this.scene = new Babylon.Scene(this.engine);
+
 
     this.contexts2D = {};
     this.textures = {};
     this.mappings2D = [];
 
-    this.fpsLabel = null;
-
     this.factory = null;
+
+    this.onCreatedCallback = null;
+
+    this.fpsLabel = null;
 }
 
-Environment.prototype.setFpsLabel = function(id) {
+Scene.prototype.setFpsLabel = function(id) {
     this.fpsLabel = document.getElementById(id);
 };
 
-Environment.prototype.setCanvas = function(id) {
-    this.canvas = document.getElementById(id);
-};
-
-Environment.prototype.setContext2D = function(key,context) {
-    this.contexts2D[key] = context;
-};
-
-Environment.prototype.setTexture = function(key,texture) {
+Scene.prototype.setTexture = function(key,texture) {
     this.textures[key] = texture;
 };
 
-
-Environment.prototype.init = function () {
-
-    this.engine = new Babylon.Engine(this.canvas, true);
-
-    this.scene = new Babylon.Scene(this.engine);
-    //var scene = createScene();
-
-    this.preload("models/", "models.babylon", 25 );
-    //babylonRender(scene);
-};
-
-Environment.prototype.preload = function( path, file, scaleFactor ) {
-    var self = this;
+Scene.prototype.preload = function( path, file, scaleFactor ) {
+    var self = this
 
     BABYLON.SceneLoader.ImportMesh( null, path, file, this.scene,
         function (imports, particleSystems) {
@@ -125,7 +136,7 @@ Environment.prototype.preload = function( path, file, scaleFactor ) {
     );
 };
 
-Environment.prototype.registerBeforeRender = function(){
+Scene.prototype.registerBeforeRender = function(){
     var self = this;
 
     self.scene.registerBeforeRender(function(){
@@ -138,7 +149,7 @@ Environment.prototype.registerBeforeRender = function(){
     //runAnimations();
 };
 
-Environment.prototype.render = function(){
+Scene.prototype.render = function(){
     var self = this;
     this.engine.runRenderLoop(function () {
         self.scene.render();
@@ -147,7 +158,7 @@ Environment.prototype.render = function(){
     });
 };
 
-Environment.prototype.make = {
+Scene.prototype.make = {
     camera: function (position,direction,maxZ,control) {
         console.log('make camera',this);
 
@@ -251,7 +262,7 @@ Environment.prototype.make = {
     }
 };
 
-Environment.prototype.create = function () {
+Scene.prototype.create = function () {
     var self = this;
 
     var scene = this.scene;
@@ -277,6 +288,7 @@ Environment.prototype.create = function () {
     // TEST card
     var card = self.make.card.call(self,ENTITIES.card.size,{x:0,y:75,z:0},"/img/resource-ore.png","/img/resource-back.png");
 
+    this.onCreatedCallback();
 //
 //
 //    var cubeWidth = 35;

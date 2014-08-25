@@ -14,14 +14,14 @@ function Environment() {
 //Environment2D.addEntity('desert','img/terrain-desert.png',{x:100,y:100}
 //Environment2D.init();
 
-Environment.prototype.init = function () {
+Environment.prototype.init = function ( state ) {
 
     console.log('init',this);
 
     this.game = new Phaser.Game(ARENA.size.length, ARENA.size.width, Phaser.CANVAS, 'phaser', null, true);
 
-    this.game.state.add('main',this.states['main']);
-    this.game.state.start('main');
+    this.game.state.add(state,this.states[state]);
+    this.game.state.start(state);
 };
 
 Environment.prototype.addEntity = function (state, name, image, position) {
