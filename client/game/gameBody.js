@@ -1,30 +1,41 @@
 
+GameBody2D = function( atlas, environment, components, position ){
+    this.atlas = atlas;
+    this.environment = environment;
+    this.sprite = null;
 
-    Terrain = function( type, game, position ) {
-        this.entity = null;
-        this.type = type;
+    this.components = components || {};
+    this.position = position || {x:0, y:0};
+};
 
-        var atlas = ATLAS.entities.terrain;
+GameBody2D.prototype.render = function(){
+
+    console.log('GameBody2D render',this);
+
+    var context = this.environment.game; // PhaserJS
+
+    var sprite = context.add.sprite( this.position.x, this.position.y, this.atlas.sprite );
+    sprite.crop({ x:0, y:0, width: this.atlas.size.x, height: this.atlas.size.y }, false);
+    //sprite.updateCrop();
+
+    loadAnimations( this.atlas.animations, sprite);
+
+    sprite.animations.play( this.components.animation, 1, false);
+    //sprite.setFrame = atlas.frames[type];
+
+    this.sprite = sprite;
+};
 
 
-        var sprite = game.add.sprite( position.x, position.y, atlas.sprite );
-        sprite.crop({ x:0, y:0, width: atlas.size.x, height: atlas.size.y }, false);
-        //sprite.updateCrop();
+function Sprite(){
 
-        loadAnimations( atlas.animations, sprite);
+}
 
-        sprite.animations.play( type, 1, false);
-        //sprite.setFrame = atlas.frames[type];
-
-        this.sprite = sprite;
-    };
-
-
-    function loadAnimations( animation, sprite ){
-        _.each( animation, function( frames, key ){
-            sprite.animations.add( key, frames );
-        })
-    }
+function loadAnimations( animation, sprite ){
+    _.each( animation, function( frames, key ){
+        sprite.animations.add( key, frames );
+    })
+}
 //
 //
 //

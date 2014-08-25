@@ -81,9 +81,9 @@ VARIANTS = {
             board: {
                 dimensions: {
                     size: {
-                        x: 1200,
+                        x: 1080,
                         y: 1,
-                        z: 1200
+                        z: 1080
                     },
                     gridSpacing: {x:91,y:105}
                 }

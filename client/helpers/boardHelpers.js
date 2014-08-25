@@ -35,7 +35,7 @@ Template.board.rendered = function(){
     // Create 2D contexts
     // from PhaserJS
     var environment2D = new Environment2D();
-    environment2D.addState('main', MANIFEST.D2 );
+    environment2D.addState('main', MANIFEST.D2, on2DEnvironmentReady );
    //environment2D.addEntity('main','desert','img/terrain-desert.png',{x:100,y:100});
     environment2D.init();
 
@@ -49,6 +49,16 @@ Template.board.rendered = function(){
     environment3D.setContext2D('tabletop',environment2D.game);
 
     environment3D.init();
+
+
+    function on2DEnvironmentReady(){
+        console.log('on2DEnvironmentReady');
+
+        // Calculate positions for game objects
+        var gameMaster = new GameMaster( VARIANTS["threeToFourPlayers"], environment2D, null );
+        gameMaster.init();
+        gameMaster.setup();
+    }
 
 
 };
