@@ -4,6 +4,8 @@
 
     <hr/>
 
+    {{> handView }}
+
     <h3>Actions:</h3>
     {{#if session.isMyTurn}}
     {{> playerActions}}
@@ -17,6 +19,10 @@
     </ul>
     <!--{{> actionHistory}}-->
 
+</template>
+
+<template name="handView">
+    <div id="handContext"></div>
 </template>
 
 <template name="turnSummary">

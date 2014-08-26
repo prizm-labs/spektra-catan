@@ -87,8 +87,9 @@ Environment.prototype.setContext2D = function( scene, key, context ) {
 
 Environment.prototype.init = function( scene ) {
 
-    this.scenes[scene].setFpsLabel('fpsLabel');
-    this.scenes[scene].preload("models/", "models.babylon", 25 );
+    var s = this.scenes[scene];
+    s.setFpsLabel('fpsLabel');
+    s.preload("models/", "models.babylon", 25 );
 };
 
 function Scene( canvas ){
@@ -118,7 +119,7 @@ Scene.prototype.setTexture = function(key,texture) {
 };
 
 Scene.prototype.preload = function( path, file, scaleFactor ) {
-    var self = this
+    var self = this;
 
     BABYLON.SceneLoader.ImportMesh( null, path, file, this.scene,
         function (imports, particleSystems) {
@@ -130,6 +131,7 @@ Scene.prototype.preload = function( path, file, scaleFactor ) {
 
             self.scene = self.create();
 
+            self.setupActions();
             self.registerBeforeRender();
             self.render();
         }
@@ -278,144 +280,38 @@ Scene.prototype.create = function () {
     ]);
 
 
-    var city = self.factory.make('city',null);
+
 
 
     var tabletop = self.make.tabletop.call(self,ARENA.size.length,ARENA.size.width,'tabletop');
     var mapping = new Mapping2D(this.textures['tabletop'],this.contexts2D['tabletop'],ARENA.size.length, ARENA.size.width);
     this.mappings2D.push(mapping);
 
-    // TEST card
-    var card = self.make.card.call(self,ENTITIES.card.size,{x:0,y:75,z:0},"/img/resource-ore.png","/img/resource-back.png");
+    // TEST OBJECTS
+//    var city = self.factory.make('city',null);
+//    var card = self.make.card.call(self,ENTITIES.card.size,{x:0,y:75,z:0},"/img/resource-ore.png","/img/resource-back.png");
 
     this.onCreatedCallback();
-//
-//
-//    var cubeWidth = 35;
-
-    // Boxes
-//        for (var i=1;i<10;i++) {
-//            var redBox = Babylon.Mesh.CreateBox("red", cubeWidth, scene);
-//            var redMat = new Babylon.StandardMaterial("ground", scene);
-//            redMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
-//            redMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
-//            redMat.emissiveColor = Babylon.Color3.Red();
-//            redBox.material = redMat;
-//            redBox.position.x -= 100*i;
-//
-//            var greenBox = Babylon.Mesh.CreateBox("green", cubeWidth, scene);
-//            var greenMat = new Babylon.StandardMaterial("ground", scene);
-//            greenMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
-//            greenMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
-//            greenMat.emissiveColor = Babylon.Color3.Green();
-//            greenBox.material = greenMat;
-//            greenBox.position.z -= 100*i;
-//
-//            var blueBox = Babylon.Mesh.CreateBox("blue", cubeWidth, scene);
-//            var blueMat = new Babylon.StandardMaterial("ground", scene);
-//            blueMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
-//            blueMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
-//            blueMat.emissiveColor = Babylon.Color3.Blue();
-//            blueBox.material = blueMat;
-//            blueBox.position.x += 100*i;
-//        }
-
-//
-//
-//    // Sphere
-//    var sphere = Babylon.Mesh.CreateSphere("sphere", 16, 20, scene);
-//    var sphereMat = new Babylon.StandardMaterial("ground", scene);
-//    sphereMat.diffuseColor = new Babylon.Color3(0.4, 0.4, 0.4);
-//    sphereMat.specularColor = new Babylon.Color3(0.4, 0.4, 0.4);
-//    sphereMat.emissiveColor = Babylon.Color3.Purple();
-//    sphere.material = sphereMat;
-//    sphere.position.z += 100;
-//
-//    // Rotating donut
-//    var donut = Babylon.Mesh.CreateTorus("donut", 20, 8, 16, scene);
-//
-//
-//    function setupActions() {
-//        // On pick interpolations
-//        var prepareButton = function (mesh, color, light) {
-//            var goToColorAction = new Babylon.InterpolateValueAction(Babylon.ActionManager.OnPickTrigger, light, "diffuse", color, 1000, null, true);
-//
-//            mesh.actionManager = new Babylon.ActionManager(scene);
-//            mesh.actionManager.registerAction(
-//                new Babylon.InterpolateValueAction(Babylon.ActionManager.OnPickTrigger, light, "diffuse", Babylon.Color3.Black(), 1000))
-//                .then(new Babylon.CombineAction(Babylon.ActionManager.NothingTrigger, [ // Then is used to add a child action used alternatively with the root action.
-//                    goToColorAction,                                                 // First click: root action. Second click: child action. Third click: going back to root action and so on...
-//                    new Babylon.SetValueAction(Babylon.ActionManager.NothingTrigger, mesh.material, "wireframe", false)
-//                ]));
-//            mesh.actionManager.registerAction(new Babylon.SetValueAction(Babylon.ActionManager.OnPickTrigger, mesh.material, "wireframe", true))
-//                .then(new Babylon.DoNothingAction());
-//            mesh.actionManager.registerAction(new Babylon.SetStateAction(Babylon.ActionManager.OnPickTrigger, light, "off"))
-//                .then(new Babylon.SetStateAction(Babylon.ActionManager.OnPickTrigger, light, "on"));
-//        };
-//
-//        prepareButton(redBox, Babylon.Color3.Red(), light1);
-//        prepareButton(greenBox, Babylon.Color3.Green(), light2);
-//        prepareButton(blueBox, Babylon.Color3.Blue(), light3);
-//
-//        // Conditions
-//        sphere.actionManager = new Babylon.ActionManager(scene);
-//        var condition1 = new Babylon.StateCondition(sphere.actionManager, light1, "off");
-//        var condition2 = new Babylon.StateCondition(sphere.actionManager, light1, "on");
-//
-//        sphere.actionManager.registerAction(new Babylon.InterpolateValueAction(Babylon.ActionManager.OnLeftPickTrigger, camera, "alpha", 0, 500, condition1));
-//        sphere.actionManager.registerAction(new Babylon.InterpolateValueAction(Babylon.ActionManager.OnLeftPickTrigger, camera, "alpha", Math.PI, 500, condition2));
-//
-//        // Over/Out
-//        var makeOverOut = function (mesh) {
-//            mesh.actionManager.registerAction(new Babylon.SetValueAction(Babylon.ActionManager.OnPointerOutTrigger, mesh.material, "emissiveColor", mesh.material.emissiveColor));
-//            mesh.actionManager.registerAction(new Babylon.SetValueAction(Babylon.ActionManager.OnPointerOverTrigger, mesh.material, "emissiveColor", Babylon.Color3.White()));
-//            mesh.actionManager.registerAction(new Babylon.InterpolateValueAction(Babylon.ActionManager.OnPointerOutTrigger, mesh, "scaling", new Babylon.Vector3(1, 1, 1), 150));
-//            mesh.actionManager.registerAction(new Babylon.InterpolateValueAction(Babylon.ActionManager.OnPointerOverTrigger, mesh, "scaling", new Babylon.Vector3(1.1, 1.1, 1.1), 150));
-//        };
-//
-//        makeOverOut(redBox);
-//        makeOverOut(greenBox);
-//        makeOverOut(blueBox);
-//        makeOverOut(sphere);
-//
-//        // scene's actions
-//        scene.actionManager = new Babylon.ActionManager(scene);
-//
-//        var rotate = function (mesh) {
-//            scene.actionManager.registerAction(new Babylon.IncrementValueAction(Babylon.ActionManager.OnEveryFrameTrigger, mesh, "rotation.y", 0.01));
-//        }
-//
-//        rotate(redBox);
-//        rotate(greenBox);
-//        rotate(blueBox);
-//
-//        // Intersections
-//        donut.actionManager = new Babylon.ActionManager(scene);
-//
-//        donut.actionManager.registerAction(new Babylon.SetValueAction(
-//            { trigger: Babylon.ActionManager.OnIntersectionEnterTrigger, parameter: sphere },
-//            donut, "scaling", new Babylon.Vector3(1.2, 1.2, 1.2)));
-//
-//        donut.actionManager.registerAction(new Babylon.SetValueAction(
-//            { trigger: Babylon.ActionManager.OnIntersectionExitTrigger, parameter: sphere }
-//            , donut, "scaling", new Babylon.Vector3(1, 1, 1)));
-//
-//    }
-//
-//    // Animations
-//    var alpha = 0;
-//
-//    function runAnimations(){
-//        donut.position.x = 100 * Math.cos(alpha);
-//        donut.position.y = 5;
-//        donut.position.z = 100 * Math.sin(alpha);
-//        alpha += 0.01;
-//
-//        card.root.rotation.x += 0.01;
-//    }
-
 
     return scene;
 };
 
+
+Scene.prototype.setupActions = function() {
+
+    this.scene.actionManager = new BABYLON.ActionManager(this.scene);
+
+    this.scene.actionManager.registerAction(
+        new BABYLON.ExecuteCodeAction(
+            BABYLON.ActionManager.OnKeyUpTrigger,
+            function (evt) {
+
+                console.log('event',evt);
+
+                if (evt.sourceEvent.key == "r") {
+
+                }
+            }));
+
+}
 

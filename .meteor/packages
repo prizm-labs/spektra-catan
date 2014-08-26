@@ -11,8 +11,6 @@ npm
 underscore
 reactive-extra
 less
-reactive-class
 prizm-core
 iron-router
-prizm-phaser
 prizm-babylonjs
