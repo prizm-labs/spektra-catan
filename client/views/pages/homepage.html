@@ -4,6 +4,8 @@
 
     <hr/>
 
+    {{> fieldView }}
+
     {{> handView }}
 
     <h3>Actions:</h3>
@@ -24,6 +26,11 @@
 <template name="handView">
     <div id="handContext"></div>
 </template>
+
+<template name="fieldView">
+    <div id="fieldContext"></div>
+</template>
+
 
 <template name="turnSummary">
     {{game.position}} / {{player.position}}
