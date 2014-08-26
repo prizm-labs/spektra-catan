@@ -21,7 +21,7 @@ Template.handView.rendered = function() {
                 this.x = x;
                 this.y = y;
 
-                this.computation.invalidate();
+                //this.computation.invalidate();
             },
             position: function(){
                 console.log(this.x+','+this.y);
@@ -42,29 +42,33 @@ Template.handView.rendered = function() {
         return body;
     }
 
-    function Body3D( ctx, x, y, z ) {
+    function Body3D( ctx, key, x, y, z ) {
 
         var body = new ReactiveObject({
-            'x': x,
-            'y': y,
-            'z': z,
+            position: {
+                x: x, y: y, z: z
+            },
+            rotation: {
+                x: 0, y: 0, z:0
+            },
             ctx: ctx,
+            key: key,
 
             place: function( x, y, z ){
-                this.x = x;
-                this.y = y;
-                this.z = z;
-
-                this.computation.invalidate();
+                this.position = {
+                    x: x, y: y, z: z
+                };
             },
-            position: function(){
-                console.log(this.x+','+this.y);
-                return [this.x,this.y];
+
+            rotate: function( x, y, z ){
+                this.rotation = {
+                    x: x, y: y, z: z
+                };
             }
 
         });
 
-        body.id = ctx.addBody(body.x,body.y,body.z);
+        body.id = ctx.addBody( key, body.position.x,body.position.y,body.position.z);
 
         body.computation = Deps.autorun(function (computation) {
             //dep.depend();
@@ -77,15 +81,28 @@ Template.handView.rendered = function() {
 
     function Factory(){
 
+        this.templates2D = {};
         this.bodies2D = [];
+
+
+        this.templates3D = {};
         this.bodies3D = [];
     }
 
     Factory.prototype = {
+        // manifest: [ key, geometry, texture ]
+        loadTemplates3D: function( manifest ){
+            console.log('loadTemplates3D',manifest);
 
-        makeBody3D: function( x, y, z ){
+            _.each(manifest, function(model){
+                ctx3D.load(model);
+            })
 
-            var body = new Body3D( ctx3D, x, y, z );
+        },
+
+        makeBody3D: function( key, x, y, z ){
+
+            var body = new Body3D( ctx3D, key, x, y, z );
             this.bodies3D.push(body);
 
             return body;
@@ -103,9 +120,17 @@ Template.handView.rendered = function() {
 
     factory = new Factory();
 
+    manifest3D = [
+        ['road', 'models/road-model.js', null, 0.5],
+        ['settlement','models/settlement-model.js',null, 0.5],
+        ['city','models/city-model.js',null, 0.5]
+    ];
+
+    factory.loadTemplates3D(manifest3D);
+
 
     b1 = factory.makeBody( 100, 100 );
-    b2 = factory.makeBody3D(0,0,0);
+    //b2 = factory.makeBody3D( 'road', 1,1,1);
 
 
     function updatePosition2D( body ){
