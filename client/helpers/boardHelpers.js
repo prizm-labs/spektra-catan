@@ -25,7 +25,7 @@ ENTITIES = {
 //    height: 1000
 //}
 
-var BABYLON = Babylon;
+//var BABYLON = Babylon;
 
 
 Template.board.rendered = function(){

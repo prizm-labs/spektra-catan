@@ -9,9 +9,6 @@
       },
       "prizm-core": {
         "path": "../prizm-core"
-      },
-      "prizm-babylonjs": {
-        "path": "../prizm-babylonjs"
       }
     },
     "packages": {
@@ -32,9 +29,6 @@
       },
       "prizm-core": {
         "path": "../prizm-core"
-      },
-      "prizm-babylonjs": {
-        "path": "../prizm-babylonjs"
       },
       "iron-layout": {
         "git": "https://github.com/EventedMind/iron-layout.git",

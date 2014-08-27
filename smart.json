@@ -1,16 +1,13 @@
 {
-    "meteor": {},
-    "packages": {
-        "npm": {},
-        "reactive-extra": {},
-        "iron-router": {
-            "version": "0.8.2"
-        },
-        "prizm-core": {
-            "path": "../prizm-core"
-        },
-        "prizm-babylonjs": {
-            "path": "../prizm-babylonjs"
-        }
+  "meteor": {},
+  "packages": {
+    "npm": {},
+    "reactive-extra": {},
+    "iron-router": {
+      "version": "0.8.2"
+    },
+    "prizm-core": {
+      "path": "../prizm-core"
     }
+  }
 }
