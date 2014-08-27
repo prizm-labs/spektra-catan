@@ -72,10 +72,4 @@ Template.handView.rendered = function() {
     factory.loadTemplates3D(manifest3D);
     factory.loadTemplates2D( 'atlas/atlas.json', manifest2D );
 
-    //TODO wait for load complete, before creating objects
-
-    //b1 = factory.makeBody2D( 100, 100, 'terrain', { variant: 'pasture' } );
-    //b2 = factory.makeBody3D( 'road', 1,1,1);
-
-
 };
