@@ -2,8 +2,6 @@
 Template.handView.rendered = function() {
     console.log('hand view rendered');
 
-    dep = new Deps.Dependency;
-
     manifest3D = [
         ['road', 'models/road-model.js', null, 0.5],
         ['settlement','models/settlement-model.js',null, 0.5],
@@ -68,8 +66,9 @@ Template.handView.rendered = function() {
     ctx3D = new PRIZM.Context3D('fieldContext', 800, 800);
     ctx3D.init();
 
-    factory = new PRIZM.Factory( ctx2D, ctx3D );
+    bodyDep = new Deps.Dependency;
+
+    factory = new PRIZM.Factory( ctx2D, ctx3D, bodyDep );
     factory.loadTemplates3D(manifest3D);
     factory.loadTemplates2D( 'atlas/atlas.json', manifest2D );
-
 };
