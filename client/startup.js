@@ -42,21 +42,22 @@ Meteor.startup(function () {
         setupGameWorld: function(){
 
             console.log('client setupGameWorld');
-            // wait for load complete, before creating objects
 
-
-
-
-
-
-
-
-            b1 = factory.makeBody2D( 100, 100, 'terrain', { variant: 'pasture' } );
+            //b1 = factory.makeBody2D( 100, 100, 'terrain', { variant: 'pasture' } );
             b2 = factory.makeBody3D( 'road', 1,1,1);
 
+            var gameMaster = new GameMaster( VARIANTS["threeToFourPlayers"], factory );
+            gameMaster.init( factory );
+            gameMaster.setup();
+
+            var tabletopCtx = factory.contexts['tabletop'];
+            var fieldCtx = factory.contexts['field'];
 
 
+            console.log('mapping contexts',tabletopCtx,fieldCtx);
 
+            fieldCtx.addDynamicTexture( 'terrain', tabletopCtx.renderer.view );
+            fieldCtx.mapTabletopTexture( 'terrain' );
             //http://stackoverflow.com/questions/17374431/client-side-asynchronous-call-in-meteor
         }
     })

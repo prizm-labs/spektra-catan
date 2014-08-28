@@ -2,11 +2,31 @@
  * Created by michaelgarrido on 8/24/14.
  */
 
+function Node(){
+    this.environments = {};
+
+    this.state = {};
+    this.bodies = {};
+
+    this.components = {};
+    // Environment2D
+    // Atlas
+
+    // Environment3D
+    // Atlas
+}
+
+Node.prototype.addBody = function( groupKey, body ){
+
+
+
+}
+
 GameMaster = function( variant, environment2D, environment3D ){
 
     this.variant = variant; // Game rules
-    this.environment2D = environment2D;
-    this.environment3D = environment3D;
+//    this.environment2D = environment2D;
+//    this.environment3D = environment3D;
 
     this.locations2D = {};
 
@@ -14,9 +34,9 @@ GameMaster = function( variant, environment2D, environment3D ){
     // Objects
 };
 
-GameMaster.prototype.init = function(){
+GameMaster.prototype.init = function( factory ){
 
-
+    this.factory = factory;
 
 
     console.log('catan',this);
@@ -42,35 +62,44 @@ GameMaster.prototype.setup = function(){
 
     var nodes = generateTerrainNodes( v.terrainMap );
 
-    var manifest = generateTerrainManifest( nodes, locations, this.environment2D );
-    this.createBodies( manifest );
+    //TODO randomize terrain locations
+
+    var manifest = generateTerrainManifest( nodes, locations, 'tabletop' );
+    this.createNodes( manifest );
 
 };
 
 
-GameMaster.prototype.createBodies = function( manifest ){
-
+GameMaster.prototype.createNodes = function( manifest ){
+    var _this = this;
     //merge position coordinates with object generator
     console.log('manifest',manifest);
 
     _.each( manifest, function(entry){
 
-        entry.node.createBody( entry.key, entry.atlas, entry.environment, entry.location );
+        console.log('createNodes',entry);
+//        var terrainBody = _this.factory.makeBody2D(
+//            entry.location.x, entry.location.y,
+//            entry.node.bodies[0][0], {variant: entry.node.bodies[0][1] } );
 
+        var terrainBody = _this.factory.makeBody(
+            'tabletop',
+            entry.node.bodies[0][0],
+            { x: entry.location.x, y: entry.location.y },
+            { variant: entry.node.bodies[0][1] }
+        );
     });
 };
 
 
-function generateTerrainManifest( nodes, locations, environment ) {
+function generateTerrainManifest( nodes, locations, zone ) {
     var manifest = [];
 
     _.each(_.zip( nodes, locations ), function( entry ){
         entry = {
-            key: 'board',
             node: entry[0],
             location: entry[1],
-            environment: environment,
-            atlas: ATLAS.entities.terrain
+            zone: zone
         };
 
         manifest.push(entry);
@@ -142,11 +171,18 @@ function generateTerrainNode ( count, type ) {
 
     for (var i=0;i<count;i++) {
 
-        var terrain = new GameNode();
+//        var terrain = new Node();
+//
+//        terrain.components['sprite'] = 'terrainSprite';
+//        terrain.components['animation'] = type;
+        var terrainData = {
+            node: 'terrain',
+            bodies: [
+                ['terrain', type]
+            ]
+        };
 
-        terrain.components['sprite'] = 'terrainSprite';
-        terrain.components['animation'] = type;
-        nodes.push(terrain);
+        nodes.push(terrainData);
     }
 
     return nodes;

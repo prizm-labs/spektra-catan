@@ -3,9 +3,9 @@ Template.handView.rendered = function() {
     console.log('hand view rendered');
 
     manifest3D = [
-        ['road', 'models/road-model.js', null, 0.5],
-        ['settlement','models/settlement-model.js',null, 0.5],
-        ['city','models/city-model.js',null, 0.5]
+        ['road', 'models/road-model.js', null, 50],
+        ['settlement','models/settlement-model.js',null, 50],
+        ['city','models/city-model.js',null, 50]
     ];
 
     manifest2D = [
@@ -60,15 +60,26 @@ Template.handView.rendered = function() {
         }]
     ];
 
-    ctx2D = new PRIZM.Context2D('handContext', 'canvas', 800, 800);
+    ctx2D = new PRIZM.Context2D('handContext', 'canvas', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
     ctx2D.init();
 
-    ctx3D = new PRIZM.Context3D('fieldContext', 800, 800);
+    ctx = new PRIZM.Context2D('tabletopContext', 'canvas', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
+    ctx.init();
+
+    ctx3D = new PRIZM.Context3D('fieldContext', WORLDS.MACRO.canvas3D[0], WORLDS.MACRO.canvas3D[1]);
     ctx3D.init();
 
     bodyDep = new Deps.Dependency;
 
     factory = new PRIZM.Factory( ctx2D, ctx3D, bodyDep );
+    factory.registerContext('tabletop',ctx);
+    factory.registerContext('hand',ctx2D);
+    factory.registerContext('field',ctx3D);
+
+
     factory.loadTemplates3D(manifest3D);
-    factory.loadTemplates2D( 'atlas/atlas.json', manifest2D );
+    //factory.loadTemplates2D( 'atlas/atlas.json', manifest2D );
+
+    factory.loadTemplates2D( 'hand', 'atlas/atlas.json', manifest2D );
+    factory.loadTemplates2D( 'tabletop', 'atlas/atlas.json', manifest2D );
 };

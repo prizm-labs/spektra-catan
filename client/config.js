@@ -6,7 +6,8 @@
 
 WORLDS = { //size, position of game world & objects
     MACRO: { //console
-
+        canvas2D: [1200,1200],
+        canvas3D: [1200,1200]
     },
     MICRO: { //mobile
 
@@ -85,7 +86,7 @@ VARIANTS = {
                         y: 1,
                         z: 1080
                     },
-                    gridSpacing: {x:91,y:105}
+                    gridSpacing: {x:91,y:105} // half dimensions of terrain sprite
                 }
 
 
