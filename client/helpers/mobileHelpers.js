@@ -3,9 +3,9 @@ Template.handView.rendered = function() {
     console.log('hand view rendered');
 
     manifest3D = [
-        ['road', 'models/road-model.js', null, 50],
-        ['settlement','models/settlement-model.js',null, 50],
-        ['city','models/city-model.js',null, 50]
+        ['road', 'models/road-model.js', null, 15],
+        ['settlement','models/settlement-model.js',null, 15],
+        ['city','models/city-model.js',null, 15]
     ];
 
     manifest2D = [

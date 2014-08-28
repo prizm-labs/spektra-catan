@@ -2,6 +2,13 @@
  * Created by michaelgarrido on 8/24/14.
  */
 
+function CameraManager(){
+
+    this.views = {}
+
+}
+
+
 function Node(){
     this.environments = {};
 
@@ -82,7 +89,7 @@ GameMaster.prototype.createNodes = function( manifest ){
 //            entry.location.x, entry.location.y,
 //            entry.node.bodies[0][0], {variant: entry.node.bodies[0][1] } );
 
-        var terrainBody = _this.factory.makeBody(
+        var terrainBody = _this.factory.makeBody2D(
             'tabletop',
             entry.node.bodies[0][0],
             { x: entry.location.x, y: entry.location.y },
