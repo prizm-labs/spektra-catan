@@ -2,43 +2,15 @@
  * Created by michaelgarrido on 8/24/14.
  */
 
-function CameraManager(){
-
-    this.views = {}
-
-}
-
-
-function Node(){
-    this.environments = {};
-
-    this.state = {};
-    this.bodies = {};
-
-    this.components = {};
-    // Environment2D
-    // Atlas
-
-    // Environment3D
-    // Atlas
-}
-
-Node.prototype.addBody = function( groupKey, body ){
-
-
-
-}
-
-GameMaster = function( variant, environment2D, environment3D ){
+// highest level translator between game state reactive data and rendered bodies
+GameMaster = function( variant ){
 
     this.variant = variant; // Game rules
-//    this.environment2D = environment2D;
-//    this.environment3D = environment3D;
-
-    this.locations2D = {};
 
     // World
     // Objects
+
+    this.nodes = {}
 };
 
 GameMaster.prototype.init = function( factory ){
@@ -56,57 +28,196 @@ GameMaster.prototype.init = function( factory ){
 //    }
 };
 
-GameMaster.prototype.setup = function(){
+GameMaster.prototype.setupNodeMatrix = function(){
     var v = this.variant;
-
     var d = v.zones.board.dimensions;
 
-    //create & place terrain
+    // Create & place terrain
     var origin = {x:(d.size.x-(10* d.gridSpacing.x))/2, y:(d.size.z-(8*d.gridSpacing.y))/2};
+    var ctxKey = 'tabletop';
 
     var locations = generateTerrainLocations( origin, v.rows, d.gridSpacing );
-    this.locations2D["terrain"] = locations;
-
-    var nodes = generateTerrainNodes( v.terrainMap );
-
+    var entries = generateTerrainEntries( v.terrainMap );
     //TODO randomize terrain locations
+    var manifest = generateTerrainManifest( entries, locations );
 
-    var manifest = generateTerrainManifest( nodes, locations, 'tabletop' );
-    this.createNodes( manifest );
+    this.factory.contexts[ctxKey].setLocations('terrain',locations);
+
+    this.createTerrainNodes( manifest, ctxKey );
+
+
+    // Create & place piece locations
+    this.createPieceLocations( locations, ctxKey );
 
 };
 
 
-GameMaster.prototype.createNodes = function( manifest ){
+GameMaster.prototype.createTerrainNodes = function( manifest, ctxKey ){
     var _this = this;
     //merge position coordinates with object generator
     console.log('manifest',manifest);
 
+    this.nodes['terrain'] = [];
+
     _.each( manifest, function(entry){
 
         console.log('createNodes',entry);
-//        var terrainBody = _this.factory.makeBody2D(
-//            entry.location.x, entry.location.y,
-//            entry.node.bodies[0][0], {variant: entry.node.bodies[0][1] } );
 
-        var terrainBody = _this.factory.makeBody2D(
-            'tabletop',
-            entry.node.bodies[0][0],
+        var bodyKey = entry.node.bodies[0][0], variantKey = entry.node.bodies[0][1];
+
+        var body = _this.factory.makeBody2D(
+            ctxKey, bodyKey,
             { x: entry.location.x, y: entry.location.y },
-            { variant: entry.node.bodies[0][1] }
+            { variant: variantKey }
         );
+
+        var node = new PRIZM.Node( entry.node.bodies[0] );
+        console.log('new node',node);
+        node.addBody('root', body);
+        node.setState( 'type', variantKey );
+
+        _this.nodes['terrain'].push(node);
     });
 };
 
+GameMaster.prototype.createPieceLocations = function( terrainOrigins, gridSpacing, ctxKey ){
 
-function generateTerrainManifest( nodes, locations, zone ) {
+    this.nodes['pieceLocations'] = [];
+
+
+    _.each( terrainOrigins, function( origin ){
+
+    });
+};
+
+function setupLocations() {
+    var self = this;
+
+    var origin = {x:offsets.boardCenter.x+2*xSpacing,y:offsets.boardCenter.y};
+
+
+    _.each(self.terrain, function(terrain){
+        generateLocationOrigins(terrain);
+    });
+
+
+    _.each(self.locations,function(location){
+        var potentialNeighbors = findNeighbors(location);
+        var currentNeighbors = location.getNeighbors();
+
+        //console.log('location.entity.zIndex: '+location.entity.zIndex);
+
+        if (currentNeighbors<potentialNeighbors) {
+            var newNeighbors = _.difference(potentialNeighbors,currentNeighbors);
+            //console.log(newNeighbors.length);
+            _.each(newNeighbors,function(newNeighbor){
+                location.addNeighbor(newNeighbor);
+                newNeighbor.addNeighbor(location);
+            });
+        }
+    });
+
+
+    _.each(self.terrain,function(terrain, index){
+        terrain.hideLocations();
+        //terrain.showLocations([0,2,4,6,8,10]);
+    });
+
+    function findNeighbors(location){
+
+        var x = location.position.x, y = location.position.y;
+
+        var neighbors = _.filter(self.locations,function(testOrigin){
+
+            var testX = testOrigin.position.x, testY = testOrigin.position.y;
+
+            return (
+                (testX==x && testY==y-ySpacing/2)
+                ||(testX==x+xSpacing/2 && testY==y-ySpacing/4)
+                ||(testX==x+xSpacing/2 && testY==y+ySpacing/4)
+                ||(testX==x && testY==y+ySpacing/2)
+                ||(testX==x-xSpacing/2 && testY==y+ySpacing/4)
+                ||(testX==x-xSpacing/2 && testY==y-ySpacing/4)
+                );
+        });
+
+        return neighbors;
+    }
+
+
+}
+
+function generateLocationsInTerrain( terrain, uniqueLocations, gridSpacing ){
+
+    var o = terrainOrigin;
+
+    // 12 possible locations in hexagon
+    // 6 edges / 6 vertices
+    var potentialLocations = [
+        {x:o.x, y:o.y-gridSpacing.y},
+        {x:o.x+gridSpacing.x/2, y:o.y-gridSpacing.y*3/4},
+        {x:o.x+gridSpacing.x, y:o.y-gridSpacing.y/2},
+        {x:o.x+gridSpacing.x, y:o.y},
+        {x:o.x+gridSpacing.x, y:o.y+gridSpacing.y/2},
+        {x:o.x+gridSpacing.x/2, y:o.y+gridSpacing.y*3/4},
+
+        {x:o.x, y:o.y+gridSpacing.y},
+        {x:o.x-gridSpacing.x/2, y:o.y+gridSpacing.y*3/4},
+        {x:o.x-gridSpacing.x, y:o.y+gridSpacing.y/2},
+
+        {x:o.x-gridSpacing.x, y:o.y},
+        {x:o.x-gridSpacing.x, y:o.y-gridSpacing.y/2},
+        {x:o.x-gridSpacing.x/2, y:o.y-gridSpacing.y*3/4}
+    ];
+
+    _.each( potentialLocations, function(origin, index) {
+
+        // is location already mapped in a previous terrain?
+        var locationAtOrigin  = _.where(uniqueLocations,origin)[0];
+
+
+        if (locationAtOrigin) {
+            //console.log('existing location');
+
+            terrain.addLocation(locationAtOrigin.model);
+            locationAtOrigin.model.addOwner(terrain);
+
+        } else {
+            //console.log('new location');
+
+            var locationType = (index%2==0) ? "vertex" : "edge";
+            var locationId = self.locations.length;
+
+            var entity = ig.game.spawnEntity(EntityLocation, origin.x, origin.y);
+            // new Piece location model
+            var pieceLocation = new PieceLocation(origin.x,origin.y,locationType,locationId,entity);
+
+            self.locationOrigins.push({
+                x:origin.x,
+                y:origin.y,
+                model: pieceLocation
+            });
+
+            terrain.addLocation(pieceLocation);
+            pieceLocation.addOwner(terrain);
+
+            self.locations.push(pieceLocation);
+        }
+
+    });
+
+    //console.log(self.locationOrigins.length);
+    return uniqueLocations;
+}
+
+
+function generateTerrainManifest( nodes, locations ) {
     var manifest = [];
 
     _.each(_.zip( nodes, locations ), function( entry ){
         entry = {
             node: entry[0],
-            location: entry[1],
-            zone: zone
+            location: entry[1]
         };
 
         manifest.push(entry);
@@ -160,7 +271,7 @@ function generateTerrainLocationsForRow( rowOrigin, rowLength, gridSpacing ){
 }
 
 
-function generateTerrainNodes( terrainMap ) {
+function generateTerrainEntries( terrainMap ) {
 
     var nodes = [];
 

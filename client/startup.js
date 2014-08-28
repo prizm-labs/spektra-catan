@@ -48,7 +48,7 @@ Meteor.startup(function () {
 
             var gameMaster = new GameMaster( VARIANTS["threeToFourPlayers"], factory );
             gameMaster.init( factory );
-            gameMaster.setup();
+            gameMaster.setupNodeMatrix();
 
 
             // Map tabletop into 3D context
@@ -62,8 +62,6 @@ Meteor.startup(function () {
 
             // Setup Camera
             camera = factory.makeCamera3D('field', 0, 0, 0, [75, 1.0, 0.1, 2000]);
-            //camera.rotate(Math.PI/4,0,0);
-
 
 
             fieldCtx.setActiveCamera( camera );
@@ -80,7 +78,17 @@ Meteor.startup(function () {
             manager.registerView( 'p4', -distance,0,500, 0,-rotation,0 );
 
             manager.setView('default');
+
+
+            n = new PRIZM.Node();
+            n2 = new PRIZM.Node();
+            n.addChild(n2);
+
+
+            //q = PRIZM.NodeMatrix.query('numberToken',{ roll: 8 });
+            q = PRIZM.NodeMatrix.query('terrain');
         }
+
     })
 
 });
