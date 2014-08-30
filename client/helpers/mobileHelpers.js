@@ -60,6 +60,25 @@ Template.handView.rendered = function() {
         }]
     ];
 
+    soundManifest = {
+        files: [
+            [ 'brick', 'sounds/brick', ['wav','m4a'] ],
+            [ 'city', 'sounds/city', ['wav','m4a'] ],
+            [ 'dice', 'sounds/dice', ['wav','m4a'] ],
+            [ 'ore', 'sounds/ore', ['wav','m4a']],
+            [ 'settlement', 'sounds/settlement', ['wav','m4a'] ],
+            [ 'sheep', 'sounds/sheep', ['wav','m4a'] ],
+            [ 'steal-card', 'sounds/steal-card', ['wav','m4a'] ],
+            [ 'wheat', 'sounds/wheat', ['wav','m4a'] ],
+            [ 'wood', 'sounds/wood', ['wav','m4a'] ],
+            [ 'background', 'sounds/background', ['wav','m4a'] ]
+            //[ '', '', '' ],
+        ]
+    };
+
+    soundManager = new PRIZM.SoundManager();
+    soundManager.load( soundManifest.files );
+
     ctx2D = new PRIZM.Context2D('handContext', 'canvas', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
     ctx2D.init();
 
