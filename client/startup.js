@@ -88,8 +88,13 @@ Meteor.startup(function () {
             //q = PRIZM.NodeMatrix.query('numberToken',{ roll: 8 });
             q = PRIZM.NodeMatrix.query('terrain');
 
-            uImanager = new PRIZM.UIManager( factory, "hitarea" );
-            uImanager.bindStageTarget('hand');
+            uiManager = new PRIZM.UIManager( factory, "hitarea" );
+            uiManager.bindStageTarget('hand');
+
+            boxTgt = uiManager.addBoxTarget(0,0,100,100,'hand');
+            boxTgt.setBehavior( 'tap', null, null, function( event ){
+                console.log('box tap stop',event);
+            });
         }
 
     })

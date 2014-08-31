@@ -17,6 +17,10 @@
     -->
 
     <div class="debug">
+
+        {{> turnSummary}}
+
+
         Players:
         <ul>
             {{#each players}}
@@ -43,7 +47,12 @@
         <p style="color:{{player.color}}">
             current player: {{ player._id}}, {{ player.first_name}} {{player.last_name}}
         </p>
+
+
+        {{> actionHistory}}
     </div>
+
+
 
 </template>
 
@@ -51,4 +60,39 @@
     <li class="player">
         <h3><a href="#" class="setPlayer">{{_id}}</a></h3>
     </li>
+</template>
+
+
+<template name="turnSummary">
+    {{game.position}} / {{player.position}}
+
+    {{#if session.isMyTurn}}
+    <h3>It's your turn!</h3>
+    {{/if}}
+    Phase: {{session.phase.title}}
+</template>
+
+
+<template name="actionHistory">
+    <h3>Actions:</h3>
+    {{#if session.isMyTurn}}
+    {{> playerActions}}
+    {{/if}}
+
+    <h3>Action:</h3>
+    <ul class="actions">
+        {{#each actions}}
+        {{> actionHistoryItem}}
+        {{/each}}
+    </ul>
+
+    <ul class="actions">
+        {{#each actions}}
+        {{> actionHistoryItem}}
+        {{/each}}
+    </ul>
+</template>
+
+<template name="actionHistoryItem">
+    <li class="action action-{{type}}">{{player}}, {{type}}, {{data.sum}}</li>
 </template>
