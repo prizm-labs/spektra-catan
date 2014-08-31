@@ -77,7 +77,7 @@ Template.handView.rendered = function() {
     };
 
     soundManager = new PRIZM.SoundManager();
-    soundManager.load( soundManifest.files );
+    soundManager.loadGroup( 'default', soundManifest.files );
 
     ctx2D = new PRIZM.Context2D('handContext', 'canvas', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
     ctx2D.init();

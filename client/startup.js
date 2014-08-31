@@ -88,7 +88,7 @@ Meteor.startup(function () {
             //q = PRIZM.NodeMatrix.query('numberToken',{ roll: 8 });
             q = PRIZM.NodeMatrix.query('terrain');
 
-            uImanager = new PRIZM.UIManager( factory );
+            uImanager = new PRIZM.UIManager( factory, "hitarea" );
             uImanager.bindStageTarget('hand');
         }
 
