@@ -6,7 +6,7 @@
 
 WORLDS = { //size, position of game world & objects
     MACRO: { //console
-        canvas2D: [1200,1200],
+        canvas2D: [1080,1080],
         canvas3D: [1200,1200]
     },
     MICRO: { //mobile

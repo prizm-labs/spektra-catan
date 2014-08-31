@@ -235,7 +235,7 @@ function generateTerrainLocations ( origin, rows, gridSpacing) {
     // Start in the most top/left position
     origin = {
         x: origin.x + 3*gridSpacing.x,
-        y: origin.y + gridSpacing.x
+        y: origin.y + gridSpacing.y
     };
 
     _.each( rows, function( rowLength, rowIndex ){

@@ -79,13 +79,16 @@ Template.handView.rendered = function() {
     soundManager = new PRIZM.SoundManager();
     soundManager.loadGroup( 'default', soundManifest.files );
 
-    ctx2D = new PRIZM.Context2D('handContext', 'canvas', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
+    ctx2D = new PRIZM.Context2D('handContext', 'canvas',
+        WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
     ctx2D.init();
 
-    ctx = new PRIZM.Context2D('tabletopContext', 'canvas', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
+    ctx = new PRIZM.Context2D('tabletopContext', 'canvas',
+        WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
     ctx.init();
 
-    ctx3D = new PRIZM.Context3D('fieldContext', WORLDS.MACRO.canvas3D[0], WORLDS.MACRO.canvas3D[1]);
+    ctx3D = new PRIZM.Context3D('fieldContext',
+        WORLDS.MACRO.canvas3D[0], WORLDS.MACRO.canvas3D[1]);
     ctx3D.init();
 
     bodyDep = new Deps.Dependency;
