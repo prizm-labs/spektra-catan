@@ -43,7 +43,7 @@ Meteor.startup(function () {
 
             console.log('client setupGameWorld');
 
-            //b1 = factory.makeBody2D( 100, 100, 'terrain', { variant: 'pasture' } );
+            b1 = factory.makeBody2D( 'tabletop', 'terrain', { x:100, y:100}, { variant: 'pasture' } );
             b2 = factory.makeBody3D( 'field', 'road', 0,0,0);
 
             var gameMaster = new GameMaster( VARIANTS["threeToFourPlayers"], factory );
@@ -91,10 +91,22 @@ Meteor.startup(function () {
             uiManager = new PRIZM.UIManager( factory, "hitarea" );
             uiManager.bindStageTarget('hand');
 
-            boxTgt = uiManager.addBoxTarget(0,0,100,100,'hand');
+            boxTgt = uiManager.addBoxTarget(0,0,1000,1000,'hand');
             boxTgt.setBehavior( 'tap', null, null, function( event ){
                 console.log('box tap stop',event);
             });
+            boxTgt.setBehavior( 'pan',
+                function( event ){
+                    console.log('box pan start',event);
+                },
+                function( event ){
+                    console.log('box pan update',event);
+                    //b1.place( b1.x+event.deltaX, b1.y+event.deltaY );
+                    b1.place( event.deltaX, event.deltaY );
+                },
+                function( event ){
+                    console.log('box pan stop',event);
+                });
         }
 
     })
