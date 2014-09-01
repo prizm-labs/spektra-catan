@@ -66,7 +66,7 @@ Meteor.startup(function () {
 
             fieldCtx.setActiveCamera( camera );
 
-            manager = new CameraManager( camera );
+            manager = new PRIZM.CameraManager( camera );
 
             var rotation = Math.PI/3;
             var distance = 700;
@@ -102,7 +102,7 @@ Meteor.startup(function () {
                 function( event ){
                     console.log('box pan update',event);
                     //b1.place( b1.x+event.deltaX, b1.y+event.deltaY );
-                    b1.place( event.center.x, event.center.y );
+                    b1.place( event.center.x, event.center.y, 0 );
                 },
                 function( event ){
                     console.log('box pan stop',event);
@@ -114,32 +114,3 @@ Meteor.startup(function () {
     })
 
 });
-
-
-function CameraManager( camera ){
-
-    this.camera = camera;
-    this.views = {};
-}
-
-CameraManager.prototype.registerView = function( key, duration, positionX, positionY, positionZ, rotationX, rotationY, rotationZ ) {
-
-    var _this = this;
-
-    this.views[key] = function(){
-
-//        _this.camera.place( positionX, positionY, positionZ, 0 );
-//        _this.camera.rotate( rotationX, rotationY, rotationZ, 0 );
-        _this.camera.registerAnimation( 'position', {x:positionX, y:positionY, z:positionZ}, duration);
-        _this.camera.registerAnimation( 'rotation', {x:rotationX, y:rotationY, z:rotationZ}, duration);
-
-        _this.camera.runAnimations();
-    }
-
-}
-
-CameraManager.prototype.setView = function( key ){
-
-    this.views[key]();
-
-}
