@@ -1,0 +1,46 @@
+<template name="tabletopView">
+    <div id="tabletopContext"></div>
+</template>
+
+<template name="handView">
+    <div id="handContext"></div>
+</template>
+
+<template name="fieldView">
+    <div id="fieldContext"></div>
+</template>
+
+
+<template name="rollAction">
+    <button id="rollDice">Roll Dice</button>
+</template>
+
+<template name="resourceProduction">
+    <button id="advancePhase">Advance phase</button>
+</template>
+
+<template name="buildAction">
+    <button id="openTrade">Trade</button>
+    <button id="build">Build</button>
+    <button id="endTurn">End Turn</button>
+</template>
+
+
+
+<template name="playerActions">
+    {{#with getActions game.phase}}
+    {{> UI.dynamic template=key}}
+    {{/with}}
+    <p>
+
+    </p>
+</template>
+
+
+
+
+<template name="gameItem">
+    <li class="game">
+        <h3><a href="#" class="loadGame">{{_id}}</a></h3>
+    </li>
+</template>

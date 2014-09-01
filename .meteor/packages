@@ -7,9 +7,10 @@ standard-app-packages
 accounts-base
 accounts-password
 accounts-ui
-npm
+arunoda:npm@0.2.6
 underscore
-reactive-extra
+mrt:reactive-extra@0.1.0
 less
+cmather:iron-router@=0.8.2
 prizm-core
-iron-router
+

@@ -2,67 +2,110 @@
  * Created by dodeca on 8/7/14.
  */
 
-ARENA = {};
 
-ARENA.size = {
-    width: 1200,
-    length: 1200,
-    height: 1400
-};
+Template.board.rendered = function() {
+    console.log('hand view rendered');
 
-ENTITIES = {
-    card: {
-        size: {
-            width: 91,
-            height: 135
-        }
-    }
-};
+    manifest3D = [
+        ['road', 'models/road-model.js', null, 15],
+        ['settlement','models/settlement-model.js',null, 15],
+        ['city','models/city-model.js',null, 15]
+    ];
 
-//ARENA.size = {
-//    width: 300,
-//    length: 300,
-//    height: 1000
-//}
+    manifest2D = [
+        ["robber","robber.png"],
+        ["numberToken",{
+            2: "count-2.png",
+            3: "count-3.png",
+            4: "count-4.png",
+            5: "count-5.png",
+            6: "count-6.png",
+            7: "count-7.png",
+            8: "count-8.png",
+            9: "count-9.png",
+            10: "count-10.png",
+            11: "count-11.png",
+            12: "count-12.png"
+        }],
+        ["terrain",{
+            "mountains": "terrain-mountains.png",
+            "hills": "terrain-hills.png",
+            "forest": "terrain-forest.png",
+            "pasture": "terrain-pasture.png",
+            "desert": "terrain-desert.png",
+            "fields": "terrain-fields.png"
+        }],
+        ["resourceCard",{
+            "back": "resource-back.png",
+            "ore": "resource-ore.png",
+            "sheep": "resource-sheep.png",
+            "grain": "resource-wheat.png",
+            "lumber": "resource-wood.png",
+            "brick": "resource-brick.png"
+        }],
+        ["developmentCard",{
+            "back": "dev-back.png",
+            "monopoly": "dev-monopoly.png",
+            "palace": "dev-palace.png",
+            "knight": "dev-knight.png",
+            "yearOfPlenty": "dev-plenty.png",
+            "roadBuilding": "dev-road.png",
+            "market": "dev-market.png",
+            "library": "dev-library.png",
+            "university": "dev-university.png"
+        }],
+        ["port",{
+            "grain": "port-grain.png",
+            "lumber": "port-lumber.png",
+            "brick": "port-brick.png",
+            "ore": "port-ore.png",
+            "wool": "port-wool.png",
+            "any": "port-any.png"
+        }]
+    ];
 
-//var BABYLON = Babylon;
+    soundManifest = {
+        files: [
+            [ 'brick', 'sounds/brick', ['wav','m4a'] ],
+            [ 'city', 'sounds/city', ['wav','m4a'] ],
+            [ 'dice', 'sounds/dice', ['wav','m4a'] ],
+            [ 'ore', 'sounds/ore', ['wav','m4a']],
+            [ 'settlement', 'sounds/settlement', ['wav','m4a'] ],
+            [ 'sheep', 'sounds/sheep', ['wav','m4a'] ],
+            [ 'steal-card', 'sounds/steal-card', ['wav','m4a'] ],
+            [ 'wheat', 'sounds/wheat', ['wav','m4a'] ],
+            [ 'wood', 'sounds/wood', ['wav','m4a'] ],
+            [ 'background', 'sounds/background', ['wav','m4a'] ]
+            //[ '', '', '' ],
+        ]
+    };
+
+    soundManager = new PRIZM.SoundManager();
+    soundManager.loadGroup( 'default', soundManifest.files );
+
+    ctx2D = new PRIZM.Context2D('handContext', 'canvas',
+        WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
+    ctx2D.init();
+
+    ctx = new PRIZM.Context2D('tabletopContext', 'canvas',
+        WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
+    ctx.init();
+
+    ctx3D = new PRIZM.Context3D('fieldContext',
+        WORLDS.MACRO.canvas3D[0], WORLDS.MACRO.canvas3D[1]);
+    ctx3D.init();
 
 
-Template.board.rendered = function(){
-    console.log('board rendered');
-
-//    // Create 2D contexts
-//    // from PhaserJS
-//    var environment2D = new Environment2D();
-//    environment2D.addState('tabletop', MANIFEST.D2, on2DEnvironmentReady );
-//    environment2D.init('tabletop');
-//
-//
-//
-//
-//    function on2DEnvironmentReady(){
-//        console.log('on2DEnvironmentReady');
-//
-//        // Create 3D contexts
-//        // from BabylonJS
-//        var environment3D = new Environment3D();
-//        environment3D.addScene('arena', 'babylon', on3DEnvironmentReady);
-//        environment3D.setContext2D('arena', 'tabletop', environment2D.game);
-//        environment3D.init('arena');
-//
-//
-//    }
-//
-//    function on3DEnvironmentReady(){
-//
-//        console.log('on3DEnvironmentReady');
-//
-//        // Calculate positions for game objects
-//        var gameMaster = new GameMaster( VARIANTS["threeToFourPlayers"], environment2D, null );
-//        gameMaster.init();
-//        gameMaster.setup();
-//    }
+    factory = new PRIZM.Factory();
+    factory.registerContext('tabletop',ctx);
+    factory.registerContext('hand',ctx2D);
+    factory.registerContext('field',ctx3D);
 
 
+    factory.loadTemplates3D(manifest3D);
+    //factory.loadTemplates2D( 'atlas/atlas.json', manifest2D );
+
+    factory.loadTemplates2D( 'hand', 'atlas/atlas.json', manifest2D );
+    factory.loadTemplates2D( 'tabletop', 'atlas/atlas.json', manifest2D );
 };
 

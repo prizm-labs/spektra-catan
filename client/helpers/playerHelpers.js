@@ -1,5 +1,4 @@
-
-Template.handView.rendered = function() {
+Template.player.rendered = function() {
     console.log('hand view rendered');
 
     manifest3D = [

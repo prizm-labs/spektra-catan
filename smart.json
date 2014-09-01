@@ -1,13 +1,11 @@
 {
-  "meteor": {},
-  "packages": {
-    "npm": {},
-    "reactive-extra": {},
-    "iron-router": {
-      "version": "0.8.2"
-    },
-    "prizm-core": {
-      "path": "../prizm-core"
+    "meteor": {},
+    "packages": {
+        "lodash": {
+            "path": "/Users/michaelgarrido/meteor-lodash"
+        },
+        "prizm-core": {
+            "path": "/Users/michaelgarrido/prizm-core"
+        }
     }
-  }
 }

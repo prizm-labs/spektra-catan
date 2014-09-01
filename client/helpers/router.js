@@ -38,7 +38,9 @@ Router.onBeforeAction(filters.myFilter, {only: ['items']});
 Router.map(function() {
 
 
-    // Game Board
+    // Public Screen
+    // vertical HDTV, horizontal IPS monitor, etc.
+    // (i.e. for 3D Game Board)
 
     this.route('board', {
         path: '/board',
@@ -64,6 +66,40 @@ Router.map(function() {
 
         }
     });
+
+    // Private Screen
+    // smartphone, tablet, or laptop
+
+    this.route('player', {
+        path: '/player',
+        action: function(){
+
+            this.render();
+
+        },
+        data: function(){
+            return {
+                session: GS,
+                game: GS.game,
+                player: GS.player,
+
+                games: Games.find().fetch(),
+                players: Players.find().fetch()
+            }
+        },
+        onAfterAction: function(){
+
+        },
+        onRun: function(){
+
+        }
+    });
+
+    // TODO Debug screen
+    // inspect live sessions as admin
+
+
+
 
     // Pages
 
