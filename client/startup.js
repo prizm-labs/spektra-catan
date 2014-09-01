@@ -38,12 +38,23 @@ Meteor.startup(function () {
 
     });
 
+    // Global sounds
+
+    soundManager = new PRIZM.SoundManager();
+    soundManager.loadGroup( 'default', soundManifest.files );
+
+    // Global contexts
+
+
+
     Meteor.methods({
         setupGameWorld: function(){
 
             console.log('client setupGameWorld');
 
-            ViewMaster.init();
+            //ViewMaster.init();
+
+            mainView.onLoadComplete.call(mainView);
         }
 
     })

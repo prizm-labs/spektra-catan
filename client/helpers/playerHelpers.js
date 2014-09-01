@@ -1,106 +1,90 @@
 Template.player.rendered = function() {
-    console.log('hand view rendered');
+    console.log('player view rendered');
 
-    manifest3D = [
-        ['road', 'models/road-model.js', null, 15],
-        ['settlement','models/settlement-model.js',null, 15],
-        ['city','models/city-model.js',null, 15]
-    ];
+    // TODO detect screen size !!!
 
-    manifest2D = [
-        ["robber","robber.png"],
-        ["numberToken",{
-            2: "count-2.png",
-            3: "count-3.png",
-            4: "count-4.png",
-            5: "count-5.png",
-            6: "count-6.png",
-            7: "count-7.png",
-            8: "count-8.png",
-            9: "count-9.png",
-            10: "count-10.png",
-            11: "count-11.png",
-            12: "count-12.png"
-        }],
-        ["terrain",{
-            "mountains": "terrain-mountains.png",
-            "hills": "terrain-hills.png",
-            "forest": "terrain-forest.png",
-            "pasture": "terrain-pasture.png",
-            "desert": "terrain-desert.png",
-            "fields": "terrain-fields.png"
-        }],
-        ["resourceCard",{
-            "back": "resource-back.png",
-            "ore": "resource-ore.png",
-            "sheep": "resource-sheep.png",
-            "grain": "resource-wheat.png",
-            "lumber": "resource-wood.png",
-            "brick": "resource-brick.png"
-        }],
-        ["developmentCard",{
-            "back": "dev-back.png",
-            "monopoly": "dev-monopoly.png",
-            "palace": "dev-palace.png",
-            "knight": "dev-knight.png",
-            "yearOfPlenty": "dev-plenty.png",
-            "roadBuilding": "dev-road.png",
-            "market": "dev-market.png",
-            "library": "dev-library.png",
-            "university": "dev-university.png"
-        }],
-        ["port",{
-            "grain": "port-grain.png",
-            "lumber": "port-lumber.png",
-            "brick": "port-brick.png",
-            "ore": "port-ore.png",
-            "wool": "port-wool.png",
-            "any": "port-any.png"
-        }]
-    ];
+    // TODO force landscape orientation !!!
 
-    soundManifest = {
-        files: [
-            [ 'brick', 'sounds/brick', ['wav','m4a'] ],
-            [ 'city', 'sounds/city', ['wav','m4a'] ],
-            [ 'dice', 'sounds/dice', ['wav','m4a'] ],
-            [ 'ore', 'sounds/ore', ['wav','m4a']],
-            [ 'settlement', 'sounds/settlement', ['wav','m4a'] ],
-            [ 'sheep', 'sounds/sheep', ['wav','m4a'] ],
-            [ 'steal-card', 'sounds/steal-card', ['wav','m4a'] ],
-            [ 'wheat', 'sounds/wheat', ['wav','m4a'] ],
-            [ 'wood', 'sounds/wood', ['wav','m4a'] ],
-            [ 'background', 'sounds/background', ['wav','m4a'] ]
-            //[ '', '', '' ],
-        ]
+
+    // TODO register device settings with view master?
+    var screenSize = VIEWS.MICRO["960x640"].landscape;
+
+    Session.set('screen','private');
+    Session.set('screenWidth',screenSize[0]);
+    Session.set('screenHeight',screenSize[1]);
+
+
+    mainView = new PRIZM.View( screenSize[0], screenSize[1] );
+    mainView.createContext2D( 'tabletop', 'tabletopContext', 'canvas', manifest2D, 'atlas/atlas.json', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1] );
+    mainView.createContext3D( 'field', 'fieldContext', manifest3D );
+    mainView.createContext2D( 'hand', 'handContext', 'canvas', manifest2D, 'atlas/atlas.json' );
+
+
+
+    mainView.onLoadComplete = function(){
+
+        b1 = this.factory.makeBody2D( 'hand', 'terrain', { x:100, y:100}, { variant: 'pasture' } );
+        b2 = this.factory.makeBody3D( 'field', 'road', 0,0,0);
+
+        var gameMaster = new GameMaster( VARIANTS["threeToFourPlayers"], this.factory );
+        gameMaster.init( this.factory );
+        gameMaster.setupNodeMatrix();
+
+
+        // Map tabletop into 3D context
+
+        var tabletopCtx = this.factory.contexts['tabletop'];
+        var fieldCtx = this.factory.contexts['field'];
+
+        //console.log('mapping contexts',tabletopCtx,fieldCtx);
+        fieldCtx.addDynamicTexture( 'terrain', tabletopCtx.renderer.view );
+        fieldCtx.mapTabletopTexture( 'terrain', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1], 0.5 );
+
+        // Setup Camera
+        camera = this.factory.makeCamera3D('field', 0, 0, 0, 75, 0.1, 2000);
+
+
+        fieldCtx.setActiveCamera( camera );
+
+        manager = new PRIZM.CameraManager( camera );
+
+        var rotation = Math.PI/3;
+        var distance = 700;
+
+        manager.registerView( 'default', 1, 0,0,500, 0,0,0 );
+        manager.registerView( 'p1', 1, 0,-distance,500, rotation,0,0 );
+        manager.registerView( 'p2', 1, distance,0,500, 0, rotation,0 );
+        manager.registerView( 'p3', 1, 0,distance,500,  -rotation,0,0 );
+        manager.registerView( 'p4', 1, -distance,0,500, 0,-rotation,0 );
+
+        manager.setView('default');
+
+
+        // Render private view bodies (i.e. hand)
+
+
+        this.present();
     };
 
-    soundManager = new PRIZM.SoundManager();
-    soundManager.loadGroup( 'default', soundManifest.files );
 
-    ctx2D = new PRIZM.Context2D('handContext', 'canvas',
-        WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
-    ctx2D.init();
-
-    ctx = new PRIZM.Context2D('tabletopContext', 'canvas',
-        WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
-    ctx.init();
-
-    ctx3D = new PRIZM.Context3D('fieldContext',
-        WORLDS.MACRO.canvas3D[0], WORLDS.MACRO.canvas3D[1]);
-    ctx3D.init();
-
-    bodyDep = new Deps.Dependency;
-
-    factory = new PRIZM.Factory( ctx2D, ctx3D, bodyDep );
-    factory.registerContext('tabletop',ctx);
-    factory.registerContext('hand',ctx2D);
-    factory.registerContext('field',ctx3D);
-
-
-    factory.loadTemplates3D(manifest3D);
-    //factory.loadTemplates2D( 'atlas/atlas.json', manifest2D );
-
-    factory.loadTemplates2D( 'hand', 'atlas/atlas.json', manifest2D );
-    factory.loadTemplates2D( 'tabletop', 'atlas/atlas.json', manifest2D );
+//    ctx = new PRIZM.Context2D('tabletopContext', 'canvas',
+//        WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
+//    ctx.init();
+//
+//    ctx3D = new PRIZM.Context3D('fieldContext',
+//        screenSize[0], screenSize[1]);
+//    ctx3D.init();
+//
+//    ctx2D = new PRIZM.Context2D('handContext', 'canvas',
+//        screenSize[0], screenSize[1]);
+//    ctx2D.init();
+//
+//    factory = new PRIZM.Factory();
+//    factory.registerContext('tabletop',ctx);
+//    factory.registerContext('hand',ctx2D);
+//    factory.registerContext('field',ctx3D);
+//
+//    factory.loadTemplates3D( manifest3D, 'field' );
+//    factory.loadTemplates2D( 'hand', 'atlas/atlas.json', manifest2D );
+//    factory.loadTemplates2D( 'tabletop', 'atlas/atlas.json', manifest2D );
 };

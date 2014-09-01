@@ -28,7 +28,8 @@ VIEWS = { //screen dimension profiles
     },
     MICRO: {
         "960x640": { //iPhone5
-
+            portrait: [640,960],
+            landscape: [960,640]
         },
         "1024x768": { //iPadMini
 
