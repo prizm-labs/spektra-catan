@@ -35,5 +35,21 @@
             "players": []
         }
 
+    ],
+
+    "sessions":[
+
+
+    ],
+
+    "channels": [
+
+        { "name": "nodes", "session_id": 1, "client_id": 1, "data": {
+            "node_id": 1, "attributes": { "position": { "x":0, "y":0 } }
+        } },
+
+        { "name": "nodes", "session_id": 1, "client_id": 2, "data": {
+            "node_id": 1, "attributes": { "position": { "x":0, "y":0 } }
+        } }
     ]
 }

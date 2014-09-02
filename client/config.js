@@ -23,7 +23,8 @@ VIEWS = { //screen dimension profiles
 
         },
         "1600x1200": {
-
+            portrait: [1200,1600],
+            landscape: [1600,1200]
         }
     },
     MICRO: {

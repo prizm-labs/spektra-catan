@@ -2,6 +2,8 @@
  * Created by dodeca on 8/5/14.
  */
 
+// Client startup
+
 Meteor.startup(function () {
 
     GameState = {
@@ -38,6 +40,7 @@ Meteor.startup(function () {
 
     });
 
+
     // Global sounds
 
     soundManager = new PRIZM.SoundManager();
@@ -45,7 +48,10 @@ Meteor.startup(function () {
 
     // Global contexts
 
+    privateView = null;
+    mainView = null;
 
+    // TODO properly determine client type (public or private) !!!!
 
     Meteor.methods({
         setupGameWorld: function(){
@@ -54,9 +60,75 @@ Meteor.startup(function () {
 
             //ViewMaster.init();
 
-            mainView.onLoadComplete.call(mainView);
+            if (privateView) privateView.onLoadComplete.call(privateView);
+
+            if (mainView) {
+
+                liveDataDelegate = new LiveDataDelegate();
+
+                nodeHandle = Meteor.subscribe('nodes',function onReady(){
+                    console.log('subscribed to public nodes !!!');
+                });
+
+                connectionStore = Meteor.connection.registerStore('nodes', {
+                    beginUpdate: function( batchSize, reset ){
+                        console.log('beginUpdate nodes', batchSize, reset);
+                    },
+                    update: function( msg ){
+                        console.log('update nodes', JSON.stringify(msg));
+                        liveDataDelegate.updateSubscriptions( msg );
+                    },
+                    endUpdate: function(){
+                        console.log('endUpdate nodes');
+                    },
+                    saveOriginals: function(){
+                        console.log('saveOriginals');
+                    },
+                    retrieveOriginals: function(){
+                        console.log('retrieveOriginals');
+                    }
+                });
+
+                mainView.onLoadComplete.call(mainView);
+
+
+
+            }
         }
 
     })
 
 });
+
+function LiveDataDelegate(){
+
+    // bind collection (or document) to reactive object
+    //i.e. Node document on server to Body2D on client
+
+    // with a translate function: position in 2D context
+
+    this.subscriptions = {};
+}
+
+LiveDataDelegate.prototype = {
+
+    registerSubscription: function( collection, id, translation ){
+
+        this.subscriptions[collection+id] = translation;
+
+    },
+
+    updateSubscriptions: function( ddpMsg ){
+
+        console.log('updateSubscriptions',ddpMsg);
+        //if id matches subscription, call translation
+        // ex:  { "msg":"changed",
+        // "collection":"nodes",
+        // "id":"qwiyKk5SFwZG9E4ca",
+        // "fields":{"x":200,"y":200}}
+
+        if (this.subscriptions[ddpMsg.collection+ddpMsg.id]) this.subscriptions[ddpMsg.collection+ddpMsg.id](ddpMsg.fields);
+
+    }
+
+}

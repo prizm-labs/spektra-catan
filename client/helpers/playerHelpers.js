@@ -14,14 +14,16 @@ Template.player.rendered = function() {
     Session.set('screenHeight',screenSize[1]);
 
 
-    mainView = new PRIZM.View( screenSize[0], screenSize[1] );
-    mainView.createContext2D( 'tabletop', 'tabletopContext', 'canvas', manifest2D, 'atlas/atlas.json', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1] );
-    mainView.createContext3D( 'field', 'fieldContext', manifest3D );
-    mainView.createContext2D( 'hand', 'handContext', 'canvas', manifest2D, 'atlas/atlas.json' );
+    privateView = new PRIZM.View( screenSize[0], screenSize[1] );
+    privateView.createUIManager( 'hitarea' );
+    privateView.createContext2D( 'tabletop', 'tabletopContext', 'canvas', manifest2D, 'atlas/atlas.json', WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1] );
+    privateView.createContext3D( 'field', 'fieldContext', manifest3D );
+    privateView.createContext2D( 'hand', 'handContext', 'canvas', manifest2D, 'atlas/atlas.json' );
 
 
 
-    mainView.onLoadComplete = function(){
+
+    privateView.onLoadComplete = function(){
 
         b1 = this.factory.makeBody2D( 'hand', 'terrain', { x:100, y:100}, { variant: 'pasture' } );
         b2 = this.factory.makeBody3D( 'field', 'road', 0,0,0);
@@ -62,29 +64,29 @@ Template.player.rendered = function() {
 
         // Render private view bodies (i.e. hand)
 
+        boxTgt = this.UI.addBoxTarget(0,0,screenSize[0], screenSize[1],'hand');
+        boxTgt.setBehavior( 'tap', null, null, function( event ){
+            console.log('box tap stop',event);
+        });
+        boxTgt.setBehavior( 'pan',
+            function( event ){
+                console.log('box pan start',event);
+            },
+            function( event ){
+                console.log('box pan update',event);
+                //b1.place( b1.x+event.deltaX, b1.y+event.deltaY );
+                b1.place( event.center.x, event.center.y, 0 );
+                Meteor.call('updateNode',"qwiyKk5SFwZG9E4ca",{x:event.center.x,y:event.center.y})
+            },
+            function( event ){
+                console.log('box pan stop',event);
+            });
+        boxTgt.activate();
+
+
+        this.UI.setTargetGroup('fullscreen',[boxTgt]);
+
 
         this.present();
     };
-
-
-//    ctx = new PRIZM.Context2D('tabletopContext', 'canvas',
-//        WORLDS.MACRO.canvas2D[0], WORLDS.MACRO.canvas2D[1]);
-//    ctx.init();
-//
-//    ctx3D = new PRIZM.Context3D('fieldContext',
-//        screenSize[0], screenSize[1]);
-//    ctx3D.init();
-//
-//    ctx2D = new PRIZM.Context2D('handContext', 'canvas',
-//        screenSize[0], screenSize[1]);
-//    ctx2D.init();
-//
-//    factory = new PRIZM.Factory();
-//    factory.registerContext('tabletop',ctx);
-//    factory.registerContext('hand',ctx2D);
-//    factory.registerContext('field',ctx3D);
-//
-//    factory.loadTemplates3D( manifest3D, 'field' );
-//    factory.loadTemplates2D( 'hand', 'atlas/atlas.json', manifest2D );
-//    factory.loadTemplates2D( 'tabletop', 'atlas/atlas.json', manifest2D );
 };

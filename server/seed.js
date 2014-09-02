@@ -28,14 +28,12 @@ if (Items.find().count() === 0) {
 
 var players = JSON.parse(Assets.getText('seed.json')).players;
 
-//console.log(players);
+
 
 if (Players.find().count() === 0) {
 
     var players = JSON.parse(Assets.getText('seed.json')).players;
 
-    //console.log(players);
-    //console.log(_);
     _.each(players,function(player){
         Players.insert(player);
     })
@@ -56,6 +54,18 @@ if (Games.find().count() === 0) {
         })
 
         Games.insert(game);
+    })
+
+}
+
+// TODO get Nodes by Game / Session ID
+
+if (Channels.find().count() === 0){
+
+    var channels = JSON.parse(Assets.getText('seed.json')).channels;
+
+    _.each(channels,function(channel){
+        Channels.insert(channel);
     })
 
 }

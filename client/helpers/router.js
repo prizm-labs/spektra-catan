@@ -84,7 +84,9 @@ Router.map(function() {
                 player: GS.player,
 
                 games: Games.find().fetch(),
-                players: Players.find().fetch()
+                players: Players.find().fetch(),
+
+                channels: Channels.find().fetch()
             }
         },
         onAfterAction: function(){
