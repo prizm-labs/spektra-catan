@@ -34,8 +34,10 @@ Template.board.rendered = function() {
 
         liveDataDelegate.registerSubscription( 'nodes', 'qwiyKk5SFwZG9E4ca', function( fields ){
 
-            b1.place( fields.x||null, fields.y||null, 0 );
-
+            //b1.place( fields.x||null, fields.y||null, 0 );
+            b1.x = fields.x||b1.x;
+            b1.y = fields.y||b1.y;
+            b1.ctx.updateBodyDirect( b1, { position: {x:b1.x, y:b1.y} } );
         });
 
 //        var gameMaster = new GameMaster( VARIANTS["threeToFourPlayers"], this.factory );

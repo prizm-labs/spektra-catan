@@ -72,20 +72,20 @@ Meteor.startup(function () {
 
                 connectionStore = Meteor.connection.registerStore('nodes', {
                     beginUpdate: function( batchSize, reset ){
-                        console.log('beginUpdate nodes', batchSize, reset);
+                        //console.log('beginUpdate nodes', batchSize, reset);
                     },
                     update: function( msg ){
-                        console.log('update nodes', JSON.stringify(msg));
+                        //console.log('update nodes', JSON.stringify(msg));
                         liveDataDelegate.updateSubscriptions( msg );
                     },
                     endUpdate: function(){
-                        console.log('endUpdate nodes');
+                        //console.log('endUpdate nodes');
                     },
                     saveOriginals: function(){
-                        console.log('saveOriginals');
+                        //console.log('saveOriginals');
                     },
                     retrieveOriginals: function(){
-                        console.log('retrieveOriginals');
+                        //console.log('retrieveOriginals');
                     }
                 });
 
