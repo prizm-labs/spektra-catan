@@ -29,8 +29,8 @@ Meteor.startup(function () {
 
         console.log('gameState comp',c);
 
-        if (GameState.get('2D') && GameState.get('3D')) {
-
+        //if (GameState.get('2D') && GameState.get('3D')) {
+        if (GameState.get('2D')) {
             console.log('loaded all assets');
             Meteor.call('setupGameWorld');
         } else {
